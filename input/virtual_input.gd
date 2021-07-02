@@ -6,6 +6,25 @@ var _pressed := {}
 func is_action_pressed(action: String) -> bool:
 	return _pressed.get(action, false)
 
+func flash_press(action: String, offset_sec := 0.0) -> void:
+	if offset_sec > 0.0:
+		yield(get_tree().create_timer(offset_sec), 'timeout')
+	
+	press(action)
+	yield(get_tree(), 'idle_frame')
+	yield(get_tree(), 'idle_frame')
+	release(action)
+
+func press_sec(action: String, offset_sec: float, held_sec: float) -> void:
+	if offset_sec > 0:
+		yield(get_tree().create_timer(offset_sec), 'timeout')
+	
+	press(action)
+	
+	yield(get_tree().create_timer(held_sec), 'timeout')
+	
+	release(action)
+
 func press(action: String) -> void:
 	var is_pressed := _pressed.get(action, false) as bool
 	if is_pressed: return

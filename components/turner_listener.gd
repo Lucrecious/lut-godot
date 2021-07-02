@@ -27,12 +27,14 @@ func _ready() -> void:
 		_animation_2_turnby[_animation_names[i]] = _turn_bys[i]
 	
 	_animation_player.connect('animation_changed', self, '_on_animation_changed')
-	_animation_player.connect('animation_finished', self, '_on_animation_finished')
+	_animation_player.connect('animation_started', self, '_on_animation_started')
 
 func _on_animation_changed(_old_animation: String, new_animation: String) -> void:
+	yield(get_tree(), 'idle_frame')
 	_on_update_flip(new_animation)
 
-func _on_animation_finished(animation: String) -> void:
+func _on_animation_started(animation: String) -> void:
+	yield(get_tree(), 'idle_frame')
 	_on_update_flip(animation)
 	
 func _on_update_flip(animation_name: String) -> void:

@@ -1,6 +1,7 @@
 class_name Component_Jump
 extends Node2D
 
+export(bool) var _input_disabled := false
 export(int, 0, 2000) var coyote_time_msec := 200
 export(int, 0, 5) var jump_count := 1
 
@@ -22,8 +23,9 @@ func _ready() -> void:
 	assert(_velocity, 'must be siblings with a velocity component')
 	assert(_gravity, 'must be siblings with a gravity component') 
 	
-	_controller.connect('action_just_pressed', self, '_jump_pressed')
-	_controller.connect('action_just_released', self, '_jump_released')
+	if not _input_disabled:
+		_controller.connect('action_just_pressed', self, '_jump_pressed')
+		_controller.connect('action_just_released', self, '_jump_released')
 	
 	_velocity.connect('floor_left', self, 'reset_coyote_time')
 	_velocity.connect('floor_hit', self, '_reset_jumps')

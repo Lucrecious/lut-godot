@@ -8,7 +8,7 @@ signal wall_left()
 signal x_direction_changed()
 signal y_direction_changed()
 
-export(float) var _units := 1.0
+export(float) var units := 1.0
 export(Vector2) var value := Vector2.ZERO
 
 var x := 0.0 setget _value_x_set, _value_x_get
@@ -35,7 +35,7 @@ func _physics_process(delta: float) -> void:
 	var previous_is_on_wall := _body.is_on_wall()
 	var previous_is_on_floor := _body.is_on_floor()
 	
-	value = _body.move_and_slide(value * _units, Vector2.UP, true) / _units
+	value = _body.move_and_slide(value * units, Vector2.UP, true) / units
 	
 	var current_is_on_wall := _body.is_on_wall()
 	var current_is_on_floor := _body.is_on_floor()
