@@ -1,5 +1,36 @@
 class_name NodE
-extends Reference
+
+static func pause_interval(node: Node, sec: float) -> void:
+	if not node: return
+	
+	var processing := node.is_processing()
+	var physics_processing := node.is_physics_processing()
+	var input_processing := node.is_processing_input()
+	var unhandled_key_input_processing := node.is_processing_unhandled_key_input()
+	var unhandled_input_processing := node.is_processing_unhandled_input()
+	var internal_processing := node.is_processing_internal()
+	var internal_physics_processing := node.is_physics_processing_internal()
+	
+	node.set_process(false)
+	node.set_physics_process(false)
+	node.set_process_input(false)
+	node.set_process_unhandled_key_input(false)
+	node.set_process_unhandled_input(false)
+	node.set_process_internal(false)
+	node.set_physics_process_internal(false)
+	
+	for child in node.get_children():
+		pause_interval(child, sec)
+	
+	yield(node.get_tree().create_timer(sec), 'timeout')
+	
+	node.set_process(processing)
+	node.set_physics_process(physics_processing)
+	node.set_process_input(input_processing)
+	node.set_process_unhandled_key_input(unhandled_key_input_processing)
+	node.set_process_unhandled_input(unhandled_input_processing)
+	node.set_process_internal(internal_processing)
+	node.set_physics_process_internal(internal_physics_processing)
 
 static func add_child(node: Node, child: Node) -> Node:
 	if not node: return null
