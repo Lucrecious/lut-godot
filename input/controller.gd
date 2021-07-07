@@ -19,6 +19,28 @@ func _ready() -> void:
 	
 	_input.connect('unhandled_input', self, '_on_unhandled_input')
 
+func use_custom_input(input: Input_Abstract) -> void:
+	assert(not input.get_parent())
+	assert(not input.is_inside_tree())
+	
+	for action in ['left_move', 'right_move', 'up_move', 'down_move']:
+		_pressed[action] = true
+	
+	for action in _pressed:
+		var p := _pressed[action] as bool
+		if not p: continue
+		var event := InputEventAction.new()
+		event.action = action
+		event.pressed = false
+		_on_unhandled_input(event)
+	
+	remove_child(_input)
+	_input.disconnect('unhandled_input', self, '_on_unhandled_input')
+	add_child(input)
+	
+	_input = input
+	_input.connect('unhandled_input', self, '_on_unhandled_input')
+
 func is_attack_pressed() -> bool:
 	return _input.is_action_pressed('attack')
 

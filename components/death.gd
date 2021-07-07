@@ -2,6 +2,7 @@ class_name Component_Death
 extends Node2D
 
 signal died()
+signal revived()
 
 onready var _disabler := NodE.get_sibling(self, Component_Disabler) as Component_Disabler
 onready var _health := NodE.get_sibling(self, Component_Health) as Component_Health
@@ -33,5 +34,24 @@ func _on_zeroed() -> void:
 		gravity.disable()
 	
 	emit_signal('died')
+	
+	_health.connect('increased', self, '_on_revived')
+
+func _on_revived() -> void:
+	_health.disconnect('increased', self, '_on_revived')
+	
+	_health.connect('zeroed', self, '_on_zeroed')
+	_disabler.enable_below(self)
+	_is_dead = false
+	
+	var collision := NodE.get_sibling(self, CollisionShape2D) as CollisionShape2D
+	if collision:
+		collision.call_deferred('set', 'disabled', false)
+	
+	var gravity := NodE.get_sibling(self, Component_Gravity) as Component_Gravity
+	if gravity:
+		gravity.enable()
+	
+	emit_signal('revived')
 
 func __null(): return

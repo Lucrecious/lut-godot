@@ -3,6 +3,7 @@ extends Node
 
 signal zeroed()
 signal damaged(amount)
+signal increased(amount)
 
 export(bool) var below_zero := false
 export(int) var current := 1
@@ -22,6 +23,9 @@ func current_set(value: int, sender: Object) -> void:
 	
 	if current < old:
 		emit_signal('damaged', old - current)
+	
+	if current > old:
+		emit_signal('increased')
 	
 	if current == 0:
 		emit_signal('zeroed')
