@@ -15,6 +15,14 @@ func flash_press(action: String, offset_sec := 0.0) -> void:
 	yield(get_tree(), 'idle_frame')
 	release(action)
 
+func flash_direction_x(direction: int) -> void:
+	if direction > 0:
+		release('left_move')
+		flash_press('right_move')
+	elif direction < 0:
+		release('right_move')
+		flash_press('left_move')
+
 func press_sec(action: String, offset_sec: float, held_sec: float) -> void:
 	if offset_sec > 0:
 		yield(get_tree().create_timer(offset_sec), 'timeout')
