@@ -15,6 +15,10 @@ func rect() -> Rect2:
 func global_rect() -> Rect2:
 	return Rect2(global_position - _extents, _extents * 2)
 
+func random_global_point_inside() -> Vector2:
+	var rect := global_rect()
+	return rect.position + Vector2(randf(), randf()) * rect.size
+
 func _extents_set(extents: Vector2) -> void:
 	_extents = extents
 	update()
