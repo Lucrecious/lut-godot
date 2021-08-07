@@ -2,6 +2,8 @@ tool
 class_name REferenceRect
 extends Node2D
 
+export(bool) var editor_only := true
+
 export (Color) var _color := Color.black setget _color_set
 export (Vector2) var _extents := Vector2(50, 50) setget _extents_set
 export(float) var _thickness := 1.0 setget _thickness_set
@@ -32,5 +34,7 @@ func _thickness_set(width: float) -> void:
 	update()
 
 func _draw() -> void:
+	if editor_only and not Engine.editor_hint: return
+	
 	var rect := Rect2(Vector2.ZERO - _extents, _extents * 2.0)
 	draw_rect(rect, _color, false, _thickness)
