@@ -30,6 +30,7 @@ onready var _body := get_parent() as KinematicBody2D
 func move_pixels(vec: Vector2) -> Vector2:
 	return _body.move_and_slide(vec / get_physics_process_delta_time(), Vector2.UP, true)
 
+var Metric := {  Pixels = 32 }
 func _physics_process(delta: float) -> void:
 	var previous_is_on_wall := _body.is_on_wall()
 	var previous_is_on_floor := _body.is_on_floor()
