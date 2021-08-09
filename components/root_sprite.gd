@@ -1,0 +1,2 @@
+class_name Component_RootSprite
+extends Node2D

@@ -17,9 +17,10 @@ func _ready() -> void:
 	
 	connect('direction_changed', self, '_update_sprite_flip')
 
-func update_direction_by_controller() -> void:
+func update_direction_by_controller() -> float:
 	var x_sign := sign(_controller.direction.x)
 	_direction_set(x_sign)
+	return x_sign
 
 func update_direction_by_velocity() -> void:
 	if abs(_velocity.x) < .5: return

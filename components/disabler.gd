@@ -8,6 +8,7 @@ func disable_below(node: Node) -> void:
 	
 	var start_index := get_index() + 1
 	
+	
 	for i in range(start_index, _parent.get_child_count()):
 		var component := _parent.get_child(i)
 		if component == node: break
