@@ -108,6 +108,19 @@ static func get_sibling_with_error(node: Node, type) -> Node:
 	assert(child, 'must be not null')
 	return child
 
+static func get_node_with_child_type(node: Node, type) -> Node:
+	if not node:
+		return null
+	
+	for child in node.get_children():
+		var child_of_type := get_child(child, type)
+		if not child_of_type:
+			continue
+		
+		return child
+	
+	return null
+
 static func set_owner_recursive(root: Node, owner: Node) -> void:
 	if not root: return
 	
