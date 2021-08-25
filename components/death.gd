@@ -38,7 +38,7 @@ func _on_zeroed() -> void:
 	
 	_health.connect('increased', self, '_on_revived')
 
-func _on_revived() -> void:
+func _on_revived(_amount: int) -> void:
 	_health.disconnect('increased', self, '_on_revived')
 	
 	_health.connect('zeroed', self, '_on_zeroed')

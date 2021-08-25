@@ -25,7 +25,7 @@ func current_set(value: int, sender: Object) -> void:
 		emit_signal('damaged', old - current)
 	
 	if current > old:
-		emit_signal('increased')
+		emit_signal('increased', current - old)
 	
 	if current == 0:
 		emit_signal('zeroed')
