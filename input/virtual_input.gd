@@ -3,6 +3,10 @@ extends Input_Abstract
 
 var _pressed := {}
 
+func release_all() -> void:
+	for action in _pressed:
+		release(action)
+
 func is_action_pressed(action: String) -> bool:
 	return _pressed.get(action, false)
 
