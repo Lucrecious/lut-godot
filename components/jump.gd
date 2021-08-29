@@ -1,6 +1,8 @@
 class_name Component_Jump
 extends Node2D
 
+signal impulsed()
+
 export(bool) var _input_disabled := false
 export(int, 0, 2000) var coyote_time_msec := 200
 export(int, 0, 5) var jump_count := 1
@@ -77,6 +79,7 @@ func impulse(use_custom_height := false, custom_height := 0.0) -> void:
 	var initial_velocity := sqrt(v0*v0 + 2*g*h)
 	_velocity.value.y = -initial_velocity
 	
+	emit_signal('impulsed')
 	
 	
 	
