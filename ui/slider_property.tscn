@@ -1,0 +1,36 @@
+[gd_scene load_steps=2 format=2]
+
+[ext_resource path="res://lut-godot/ui/slider_property.gd" type="Script" id=1]
+
+[node name="SliderProperty" type="Control"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+script = ExtResource( 1 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="HBoxContainer" type="HBoxContainer" parent="."]
+anchor_right = 1.0
+anchor_bottom = 1.0
+custom_constants/separation = 20
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Label" type="Label" parent="HBoxContainer"]
+margin_right = 230.0
+margin_bottom = 14.0
+size_flags_horizontal = 3
+size_flags_vertical = 0
+text = "test"
+
+[node name="HSlider" type="HSlider" parent="HBoxContainer"]
+margin_left = 250.0
+margin_right = 480.0
+margin_bottom = 16.0
+size_flags_horizontal = 3
+value = 50.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
