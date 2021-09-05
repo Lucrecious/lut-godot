@@ -11,7 +11,7 @@ func _ready() ->void:
 	for action in _bindable_actions:
 		var keybind := keybind_property_scene.instance() as UI_KeybindProperty
 		keybind.text = action
-		keybind.button_text = _scancode_for_action(action)
+		keybind.button_text = _display_for_action(action)
 		_vbox.add_child(keybind)
 		keybind.connect('button_pressed', self, '_on_keybind_pressed', [action, keybind])
 
@@ -22,30 +22,35 @@ func _on_keybind_pressed(action, keybind: UI_KeybindProperty) -> void:
 	
 	yield(_wait_for_key, 'popup_hide')
 	
-	if _wait_for_key.last_scancode_pressed() == 0:
+	var last_valid_input_event := _wait_for_key.last_valid_input_event() as InputEvent
+	if not last_valid_input_event:
 		return
 	
-	var key_event := _key_event_for_action(action)
-	InputMap.action_erase_event(action, key_event)
-	key_event.scancode = _wait_for_key.last_scancode_pressed()
-	InputMap.action_add_event(action, key_event)
-	keybind.button_text = _scancode_for_action(action)
+	
+	InputMap.action_erase_events(action)
+	InputMap.action_add_event(action, last_valid_input_event)
+	keybind.button_text = _display_for_action(action)
 	
 
-func _key_event_for_action(action: String) -> InputEventKey:
+func _event_for_action(action: String) -> InputEvent:
 	var input_events := InputMap.get_action_list(action)
 	
 	for e in input_events:
-		if not e is InputEventKey:
-			continue
 		return e
 	
 	return null
 
-func _scancode_for_action(action: String) -> String:
-	var keyevent := _key_event_for_action(action)
+func _display_for_action(action: String) -> String:
+	var event := _event_for_action(action)
 	
-	if keyevent:
-		return OS.get_scancode_string(keyevent.scancode)
+	if event is InputEventKey:
+		return OS.get_scancode_string(event.scancode)
+	
+	if event is InputEventJoypadButton:
+		return Input.get_joy_button_string(event.button_index)
+	
+	if event is InputEventJoypadMotion:
+		var s := sign(event.axis_value)
+		return '%s %s' % [Input.get_joy_axis_string(event.axis), 'P' if s > 0 else 'N']
 	
 	return ''

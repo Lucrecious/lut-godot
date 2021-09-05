@@ -23,9 +23,6 @@ func use_custom_input(input: Input_Abstract) -> void:
 	assert(not input.get_parent())
 	assert(not input.is_inside_tree())
 	
-	for action in ['left_move', 'right_move', 'up_move', 'down_move']:
-		_pressed[action] = true
-	
 	for action in _pressed:
 		var p := _pressed[action] as bool
 		if not p: continue
@@ -78,11 +75,17 @@ func _on_unhandled_input(event: InputEvent) -> void:
 
 
 func _is_direction_event(event: InputEvent) -> bool:
-	if event.is_action('left_move'): return true
-	if event.is_action('right_move'): return true
-	if event.is_action('up_move'): return true
-	if event.is_action('down_move'): return true
-	
+	if event is InputEventJoypadMotion:
+		var direction_action := _get_matching_direction_action(event)
+		if direction_action == 'left_move': return true
+		if direction_action == 'right_move': return true
+		if direction_action == 'up_move': return true
+		if direction_action == 'down_move': return true
+	else:
+		for action in ['left_move', 'right_move', 'up_move', 'down_move']:
+			if not event.is_action(action):
+				continue
+			return true
 	return false
 
 func _update_direction() -> void:
@@ -99,11 +102,41 @@ func _get_action_name(event: InputEvent) -> String:
 	if event.is_action('jump'): return 'jump'
 	if event.is_action('dodge'): return 'dodge'
 	if event.is_action('attack'): return 'attack'
+	
+	if event is InputEventJoypadMotion:
+		return _get_matching_direction_action(event)
+	
 	if event.is_action('left_move'): return 'left_move'
 	if event.is_action('right_move'): return 'right_move'
-	if event.is_action('down_move'): return 'down_move'
 	if event.is_action('up_move'): return 'up_move'
+	if event.is_action('down_move'): return 'down_move'
+	
 	return ''
+
+
+func _get_matching_direction_action(event: InputEventJoypadMotion) -> String:
+	if not event:
+		return ''
+	
+	for action in InputMap.get_actions():
+		for event_ in InputMap.get_action_list(action):
+			var joy_motion = event_ as InputEventJoypadMotion
+			if not joy_motion:
+				continue
+			
+			if joy_motion.device != event.device:
+				continue
+			
+			if joy_motion.axis != event.axis:
+				continue
+			
+			if sign(joy_motion.axis_value) != sign(event.axis_value):
+				continue
+			
+			return action
+	
+	return ''
+
 
 func _direction_get() -> Vector2:
 	return direction
