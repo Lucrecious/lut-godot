@@ -5,6 +5,7 @@
 [node name="SliderProperty" type="Control"]
 anchor_right = 1.0
 anchor_bottom = 1.0
+rect_min_size = Vector2( 0, 16 )
 script = ExtResource( 1 )
 __meta__ = {
 "_edit_use_anchors_": false
@@ -23,14 +24,14 @@ margin_right = 230.0
 margin_bottom = 14.0
 size_flags_horizontal = 3
 size_flags_vertical = 0
-text = "test"
+text = "property"
 
 [node name="HSlider" type="HSlider" parent="HBoxContainer"]
 margin_left = 250.0
 margin_right = 480.0
 margin_bottom = 16.0
+focus_mode = 0
 size_flags_horizontal = 3
-value = 50.0
 __meta__ = {
 "_edit_use_anchors_": false
 }

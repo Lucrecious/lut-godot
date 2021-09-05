@@ -1,0 +1,42 @@
+[gd_scene load_steps=2 format=2]
+
+[ext_resource path="res://lut-godot/ui/keybind_property.gd" type="Script" id=1]
+
+[node name="KeyBind" type="Control"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+rect_min_size = Vector2( 0, 16 )
+script = ExtResource( 1 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="HBox" type="HBoxContainer" parent="."]
+anchor_right = 1.0
+anchor_bottom = 1.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Action" type="Label" parent="HBox"]
+margin_top = 128.0
+margin_right = 54.0
+margin_bottom = 142.0
+text = "property"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Space" type="Control" parent="HBox"]
+margin_left = 58.0
+margin_right = 406.0
+margin_bottom = 270.0
+size_flags_horizontal = 3
+
+[node name="Button" type="Button" parent="HBox"]
+margin_left = 410.0
+margin_right = 480.0
+margin_bottom = 270.0
+rect_min_size = Vector2( 70, 0 )
+focus_mode = 0
+text = "<button>"
