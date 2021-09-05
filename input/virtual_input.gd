@@ -7,9 +7,6 @@ func release_all() -> void:
 	for action in _pressed:
 		release(action)
 
-func is_action_pressed(action: String) -> bool:
-	return _pressed.get(action, false)
-
 func flash_press(action: String, offset_sec := 0.0) -> void:
 	if offset_sec > 0.0:
 		yield(get_tree().create_timer(offset_sec), 'timeout')

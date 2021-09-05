@@ -6,3 +6,4 @@ func _unhandled_input(event: InputEvent) -> void:
 		return
 	
 	emit_signal('unhandled_input', event)
+	get_tree().set_input_as_handled()

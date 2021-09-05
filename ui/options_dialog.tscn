@@ -7,21 +7,13 @@
 [ext_resource path="res://lut-godot/ui/wait_for_key_prompt.gd" type="Script" id=5]
 [ext_resource path="res://assets/ui_theme.tres" type="Theme" id=6]
 
-[node name="OptionsDialog" type="Control"]
+[node name="OptionsDialog" type="CanvasLayer"]
+layer = 50
+
+[node name="ConfirmationDialog" type="AcceptDialog" parent="."]
 anchor_right = 1.0
 anchor_bottom = 1.0
 focus_mode = 2
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
-[node name="CanvasLayer" type="CanvasLayer" parent="."]
-layer = 50
-
-[node name="ConfirmationDialog" type="AcceptDialog" parent="CanvasLayer"]
-visible = true
-anchor_right = 1.0
-anchor_bottom = 1.0
 theme = ExtResource( 6 )
 popup_exclusive = true
 window_title = ""
@@ -31,7 +23,7 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="TabContainer" type="TabContainer" parent="CanvasLayer/ConfirmationDialog"]
+[node name="TabContainer" type="TabContainer" parent="ConfirmationDialog"]
 anchor_right = 1.0
 anchor_bottom = 1.0
 margin_left = 8.0
@@ -43,7 +35,7 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="Audio" type="Tabs" parent="CanvasLayer/ConfirmationDialog/TabContainer"]
+[node name="Audio" type="Tabs" parent="ConfirmationDialog/TabContainer"]
 anchor_right = 1.0
 anchor_bottom = 1.0
 margin_left = 10.0
@@ -55,7 +47,7 @@ _master_bus_name = "Master"
 _music_bus_name = "Music"
 _sound_bus_name = "Sound"
 
-[node name="Margin" type="MarginContainer" parent="CanvasLayer/ConfirmationDialog/TabContainer/Audio"]
+[node name="Margin" type="MarginContainer" parent="ConfirmationDialog/TabContainer/Audio"]
 anchor_right = 1.0
 anchor_bottom = 1.0
 margin_bottom = -62.0
@@ -67,7 +59,7 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="VBox" type="VBoxContainer" parent="CanvasLayer/ConfirmationDialog/TabContainer/Audio/Margin"]
+[node name="VBox" type="VBoxContainer" parent="ConfirmationDialog/TabContainer/Audio/Margin"]
 margin_left = 5.0
 margin_top = 5.0
 margin_right = 439.0
@@ -77,7 +69,7 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="Master" parent="CanvasLayer/ConfirmationDialog/TabContainer/Audio/Margin/VBox" instance=ExtResource( 2 )]
+[node name="Master" parent="ConfirmationDialog/TabContainer/Audio/Margin/VBox" instance=ExtResource( 2 )]
 anchor_right = 0.0
 anchor_bottom = 0.0
 margin_right = 434.0
@@ -86,7 +78,7 @@ size_flags_vertical = 3
 text = "Master"
 value = 0.75
 
-[node name="Music" parent="CanvasLayer/ConfirmationDialog/TabContainer/Audio/Margin/VBox" instance=ExtResource( 2 )]
+[node name="Music" parent="ConfirmationDialog/TabContainer/Audio/Margin/VBox" instance=ExtResource( 2 )]
 anchor_right = 0.0
 anchor_bottom = 0.0
 margin_top = 39.0
@@ -96,7 +88,7 @@ size_flags_vertical = 3
 text = "Music"
 value = 1.0
 
-[node name="Sound" parent="CanvasLayer/ConfirmationDialog/TabContainer/Audio/Margin/VBox" instance=ExtResource( 2 )]
+[node name="Sound" parent="ConfirmationDialog/TabContainer/Audio/Margin/VBox" instance=ExtResource( 2 )]
 anchor_right = 0.0
 anchor_bottom = 0.0
 margin_top = 78.0
@@ -106,7 +98,7 @@ size_flags_vertical = 3
 text = "Sound"
 value = 1.0
 
-[node name="Key Binding" type="Tabs" parent="CanvasLayer/ConfirmationDialog/TabContainer"]
+[node name="Key Binding" type="Tabs" parent="ConfirmationDialog/TabContainer"]
 visible = false
 anchor_right = 1.0
 anchor_bottom = 1.0
@@ -117,7 +109,7 @@ margin_bottom = -10.0
 script = ExtResource( 4 )
 _bindable_actions = [ "left_move", "right_move", "up_move", "down_move", "jump", "dodge", "attack" ]
 
-[node name="VBox" type="VBoxContainer" parent="CanvasLayer/ConfirmationDialog/TabContainer/Key Binding"]
+[node name="VBox" type="VBoxContainer" parent="ConfirmationDialog/TabContainer/Key Binding"]
 anchor_right = 1.0
 anchor_bottom = 1.0
 custom_constants/separation = 9
@@ -125,8 +117,7 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="WaitForKey" type="WindowDialog" parent="CanvasLayer/ConfirmationDialog/TabContainer/Key Binding"]
-visible = true
+[node name="WaitForKey" type="WindowDialog" parent="ConfirmationDialog/TabContainer/Key Binding"]
 margin_right = 153.0
 margin_bottom = 83.0
 popup_exclusive = true
@@ -135,25 +126,25 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="CenterContainer" type="CenterContainer" parent="CanvasLayer/ConfirmationDialog/TabContainer/Key Binding/WaitForKey"]
+[node name="CenterContainer" type="CenterContainer" parent="ConfirmationDialog/TabContainer/Key Binding/WaitForKey"]
 anchor_right = 1.0
 anchor_bottom = 1.0
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="VBoxContainer" type="VBoxContainer" parent="CanvasLayer/ConfirmationDialog/TabContainer/Key Binding/WaitForKey/CenterContainer"]
+[node name="VBoxContainer" type="VBoxContainer" parent="ConfirmationDialog/TabContainer/Key Binding/WaitForKey/CenterContainer"]
 margin_left = 28.0
 margin_top = 15.0
 margin_right = 125.0
 margin_bottom = 67.0
 
-[node name="Label" type="Label" parent="CanvasLayer/ConfirmationDialog/TabContainer/Key Binding/WaitForKey/CenterContainer/VBoxContainer"]
+[node name="Label" type="Label" parent="ConfirmationDialog/TabContainer/Key Binding/WaitForKey/CenterContainer/VBoxContainer"]
 margin_right = 97.0
 margin_bottom = 28.0
 text = "Press Any Key"
 
-[node name="Button" type="Button" parent="CanvasLayer/ConfirmationDialog/TabContainer/Key Binding/WaitForKey/CenterContainer/VBoxContainer"]
+[node name="Button" type="Button" parent="ConfirmationDialog/TabContainer/Key Binding/WaitForKey/CenterContainer/VBoxContainer"]
 margin_top = 32.0
 margin_right = 97.0
 margin_bottom = 52.0
@@ -162,4 +153,4 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[connection signal="pressed" from="CanvasLayer/ConfirmationDialog/TabContainer/Key Binding/WaitForKey/CenterContainer/VBoxContainer/Button" to="CanvasLayer/ConfirmationDialog/TabContainer/Key Binding/WaitForKey" method="hide"]
+[connection signal="pressed" from="ConfirmationDialog/TabContainer/Key Binding/WaitForKey/CenterContainer/VBoxContainer/Button" to="ConfirmationDialog/TabContainer/Key Binding/WaitForKey" method="hide"]
