@@ -1,20 +1,19 @@
-[gd_scene load_steps=7 format=2]
+[gd_scene load_steps=6 format=2]
 
 [ext_resource path="res://lut-godot/ui/options_dialog.gd" type="Script" id=1]
 [ext_resource path="res://lut-godot/ui/slider_property.tscn" type="PackedScene" id=2]
 [ext_resource path="res://lut-godot/ui/audio_control.gd" type="Script" id=3]
 [ext_resource path="res://lut-godot/ui/keybinding_control.gd" type="Script" id=4]
 [ext_resource path="res://lut-godot/ui/wait_for_key_prompt.gd" type="Script" id=5]
-[ext_resource path="res://assets/ui_theme.tres" type="Theme" id=6]
 
 [node name="OptionsDialog" type="CanvasLayer"]
 layer = 50
 
 [node name="ConfirmationDialog" type="AcceptDialog" parent="."]
+visible = true
 anchor_right = 1.0
 anchor_bottom = 1.0
 focus_mode = 2
-theme = ExtResource( 6 )
 popup_exclusive = true
 window_title = ""
 resizable = true
@@ -38,10 +37,10 @@ __meta__ = {
 [node name="Audio" type="Tabs" parent="ConfirmationDialog/TabContainer"]
 anchor_right = 1.0
 anchor_bottom = 1.0
-margin_left = 10.0
-margin_top = 42.0
-margin_right = -10.0
-margin_bottom = -10.0
+margin_left = 4.0
+margin_top = 32.0
+margin_right = -4.0
+margin_bottom = -4.0
 script = ExtResource( 3 )
 _master_bus_name = "Master"
 _music_bus_name = "Music"
@@ -62,8 +61,8 @@ __meta__ = {
 [node name="VBox" type="VBoxContainer" parent="ConfirmationDialog/TabContainer/Audio/Margin"]
 margin_left = 5.0
 margin_top = 5.0
-margin_right = 439.0
-margin_bottom = 107.0
+margin_right = 451.0
+margin_bottom = 123.0
 custom_constants/separation = 15
 __meta__ = {
 "_edit_use_anchors_": false
@@ -72,8 +71,8 @@ __meta__ = {
 [node name="Master" parent="ConfirmationDialog/TabContainer/Audio/Margin/VBox" instance=ExtResource( 2 )]
 anchor_right = 0.0
 anchor_bottom = 0.0
-margin_right = 434.0
-margin_bottom = 24.0
+margin_right = 446.0
+margin_bottom = 29.0
 size_flags_vertical = 3
 text = "Master"
 value = 0.75
@@ -81,9 +80,9 @@ value = 0.75
 [node name="Music" parent="ConfirmationDialog/TabContainer/Audio/Margin/VBox" instance=ExtResource( 2 )]
 anchor_right = 0.0
 anchor_bottom = 0.0
-margin_top = 39.0
-margin_right = 434.0
-margin_bottom = 63.0
+margin_top = 44.0
+margin_right = 446.0
+margin_bottom = 73.0
 size_flags_vertical = 3
 text = "Music"
 value = 1.0
@@ -91,9 +90,9 @@ value = 1.0
 [node name="Sound" parent="ConfirmationDialog/TabContainer/Audio/Margin/VBox" instance=ExtResource( 2 )]
 anchor_right = 0.0
 anchor_bottom = 0.0
-margin_top = 78.0
-margin_right = 434.0
-margin_bottom = 102.0
+margin_top = 88.0
+margin_right = 446.0
+margin_bottom = 118.0
 size_flags_vertical = 3
 text = "Sound"
 value = 1.0
@@ -134,10 +133,10 @@ __meta__ = {
 }
 
 [node name="VBoxContainer" type="VBoxContainer" parent="ConfirmationDialog/TabContainer/Key Binding/WaitForKey/CenterContainer"]
-margin_left = 28.0
-margin_top = 15.0
-margin_right = 125.0
-margin_bottom = 67.0
+margin_left = 31.0
+margin_top = 22.0
+margin_right = 121.0
+margin_bottom = 60.0
 
 [node name="Label" type="Label" parent="ConfirmationDialog/TabContainer/Key Binding/WaitForKey/CenterContainer/VBoxContainer"]
 margin_right = 97.0
