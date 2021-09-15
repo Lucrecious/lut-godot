@@ -10,13 +10,11 @@ signal jump_pressed()
 
 var direction := Vector2.ZERO setget, _direction_get
 
-onready var _input := NodE.get_child(self, Input_Abstract) as Input_Abstract
+onready var _input := NodE.get_child_with_error(self, Input_Abstract) as Input_Abstract
 
 var _pressed := {}
 
 func _ready() -> void:
-	assert(_input, 'input must be a child')
-	
 	_input.connect('unhandled_input', self, '_on_unhandled_input')
 
 func use_custom_input(input: Input_Abstract) -> void:
