@@ -8,6 +8,15 @@ signal wall_left()
 signal x_direction_changed()
 signal y_direction_changed()
 
+export(bool) var top_down_mode := false setget _top_down_mode_set
+var _up_direction := Vector2.ZERO
+func _top_down_mode_set(value: bool) -> void:
+	top_down_mode = value
+	if top_down_mode:
+		_up_direction = Vector2.ZERO
+	else:
+		_up_direction = Vector2.UP
+
 export(float) var units := 1.0
 export(Vector2) var value := Vector2.ZERO
 
@@ -35,7 +44,7 @@ func _physics_process(delta: float) -> void:
 	var previous_is_on_wall := _body.is_on_wall()
 	var previous_is_on_floor := _body.is_on_floor()
 	
-	value = _body.move_and_slide(value * units, Vector2.UP, true) / units
+	value = _body.move_and_slide(value * units, _up_direction, true) / units
 	
 	var current_is_on_wall := _body.is_on_wall()
 	var current_is_on_floor := _body.is_on_floor()

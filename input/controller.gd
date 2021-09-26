@@ -6,7 +6,8 @@ signal direction_h_changed()
 signal direction_v_changed()
 signal action_just_pressed(action)
 signal action_just_released(action)
-signal jump_pressed()
+
+export(Resource) var binded_actions: Resource = null
 
 var direction := Vector2.ZERO setget, _direction_get
 
@@ -15,6 +16,7 @@ onready var _input := NodE.get_child_with_error(self, Input_Abstract) as Input_A
 var _pressed := {}
 
 func _ready() -> void:
+	assert(binded_actions, 'must be set')
 	_input.connect('unhandled_input', self, '_on_unhandled_input')
 
 func use_custom_input(input: Input_Abstract) -> void:
@@ -36,9 +38,6 @@ func use_custom_input(input: Input_Abstract) -> void:
 	_input = input
 	_input.connect('unhandled_input', self, '_on_unhandled_input')
 
-func is_attack_pressed() -> bool:
-	return _pressed.get('attack', false)
-
 func is_action_pressed(action: String) -> bool:
 	return _pressed.get(action, false)
 
@@ -51,8 +50,6 @@ func _on_unhandled_input(event: InputEvent) -> void:
 	if event.is_pressed():
 		_pressed[action_name] = true
 		emit_signal('action_just_pressed', action_name)
-		if action_name == 'jump':
-			emit_signal('jump_pressed')
 	else:
 		_pressed.erase(action_name)
 		emit_signal('action_just_released', action_name)
@@ -75,39 +72,43 @@ func _on_unhandled_input(event: InputEvent) -> void:
 func _is_direction_event(event: InputEvent) -> bool:
 	if event is InputEventJoypadMotion:
 		var direction_action := _get_matching_direction_action(event)
-		if direction_action == 'left_move': return true
-		if direction_action == 'right_move': return true
-		if direction_action == 'up_move': return true
-		if direction_action == 'down_move': return true
-	else:
-		for action in ['left_move', 'right_move', 'up_move', 'down_move']:
-			if not event.is_action(action):
+		for i in binded_actions.vectors.size():
+			if not direction_action in binded_actions.get_leftrightupdown(i):
 				continue
 			return true
+	else:
+		for i in binded_actions.vectors.size():
+			for action in binded_actions.get_leftrightupdown(i):
+				if not event.is_action(action):
+					continue
+				return true
 	return false
 
 func _update_direction() -> void:
-	var left := int(_pressed.get('left_move', false))
-	var right := int(_pressed.get('right_move', false))
-	var up := int(_pressed.get('up_move', false))
-	var down := int(_pressed.get('down_move', false))
+	var leftrightupdown := binded_actions.get_leftrightupdown(0) as PoolStringArray
+	var left := int(_pressed.get(leftrightupdown[0], false))
+	var right := int(_pressed.get(leftrightupdown[1], false))
+	var up := int(_pressed.get(leftrightupdown[2], false))
+	var down := int(_pressed.get(leftrightupdown[3], false))
 	
 	direction = Vector2(right - left, down - up)
 	if direction == Vector2.ZERO: return
 	direction = direction.normalized()
 
 func _get_action_name(event: InputEvent) -> String:
-	if event.is_action('jump'): return 'jump'
-	if event.is_action('dodge'): return 'dodge'
-	if event.is_action('attack'): return 'attack'
+	for action in binded_actions.single_actions:
+		if not event.is_action(action):
+			continue
+		return action
 	
 	if event is InputEventJoypadMotion:
 		return _get_matching_direction_action(event)
 	
-	if event.is_action('left_move'): return 'left_move'
-	if event.is_action('right_move'): return 'right_move'
-	if event.is_action('up_move'): return 'up_move'
-	if event.is_action('down_move'): return 'down_move'
+	for i in binded_actions.vectors.size():
+		for action in binded_actions.get_leftrightupdown(i):
+			if not event.is_action(action):
+				continue
+			return action
 	
 	return ''
 
