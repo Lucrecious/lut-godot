@@ -112,7 +112,6 @@ func _get_action_name(event: InputEvent) -> String:
 	
 	return ''
 
-
 func _get_matching_direction_action(event: InputEventJoypadMotion) -> String:
 	if not event:
 		return ''
