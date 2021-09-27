@@ -85,7 +85,6 @@ func _animation_callback() -> void:
 	_callback_method = ''
 	object.call(method)
 	
-	
 	_play_next_highest_priority_expression(index)
 
 func _on_conditions_unmet(sender: SignalExpression) -> void:

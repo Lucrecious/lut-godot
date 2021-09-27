@@ -35,19 +35,54 @@ func _value_y_set(y: float) -> void:
 
 var _previous_value := Vector2.ZERO
 
-onready var _body := get_parent() as KinematicBody2D
+onready var _body := get_parent()
+
+var _physics_process_func: FuncRef
+func _ready() -> void:
+	if _body is KinematicBody2D:
+		_physics_process_func = funcref(self, '_physics_process_kinematicbody2d')
+	elif _body is Node2D:
+		_physics_process_func = funcref(self, '_physics_process_node2d')
+	else:
+		set_physics_process(false)
 
 func move_pixels(vec: Vector2) -> Vector2:
-	return _body.move_and_slide(vec / get_physics_process_delta_time(), Vector2.UP, true)
+	if _body is KinematicBody2D:
+		return _body.move_and_slide(vec / get_physics_process_delta_time(), Vector2.UP, true)
+	
+	if _body is Node2D:
+		_body.position += vec
+		return vec
+	
+	return Vector2.ZERO
 
 func _physics_process(delta: float) -> void:
-	var previous_is_on_wall := _body.is_on_wall()
-	var previous_is_on_floor := _body.is_on_floor()
+	assert(_physics_process_func, 'must be set at this point or this should not be running')
+	_physics_process_func.call_func()
+
+func _physics_process_node2d() -> void:
+	var body := _body as Node2D
 	
-	value = _body.move_and_slide(value * units, _up_direction, true) / units
+	body.position += value * units * get_physics_process_delta_time()
 	
-	var current_is_on_wall := _body.is_on_wall()
-	var current_is_on_floor := _body.is_on_floor()
+	if sign(_previous_value.x) != sign(value.x):
+		emit_signal('x_direction_changed')
+	
+	if sign(_previous_value.y) != sign(value.y):
+		emit_signal('y_direction_changed')
+	
+	_previous_value = value
+
+func _physics_process_kinematicbody2d() -> void:
+	var body := _body as KinematicBody2D
+	
+	var previous_is_on_wall := body.is_on_wall()
+	var previous_is_on_floor := body.is_on_floor()
+	
+	value = body.move_and_slide(value * units, _up_direction, true) / units
+	
+	var current_is_on_wall := body.is_on_wall()
+	var current_is_on_floor := body.is_on_floor()
 	var current_value := value
 	
 	if sign(_previous_value.x) != sign(current_value.x):
