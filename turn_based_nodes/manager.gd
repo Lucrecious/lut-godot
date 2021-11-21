@@ -1,30 +1,33 @@
 class_name TurnBased_Manager
 extends Node
 
-signal turn_changed()
+signal turn_changed(player)
 
-export(int) var turn := 0 setget _turn_set
+export(int) var turn := -1 setget _turn_set
 
-var _current_player: TurnBased_Player = null
+var players := []
 
 func _ready() -> void:
-	connect('turn_changed', self, '_on_turn_changed', [])
-	_on_turn_changed()
+	yield(get_tree().create_timer(2.0), 'timeout')
+	start()
 
-func _on_turn_changed() -> void:
-	_switch_players()
-
-func _switch_players() -> void:
-	if _current_player:
-		_current_player.disconnect('command', self, '_on_command')
+func start() -> void:
+	if turn > -1:
+		# already started
+		return
 	
-	_current_player = get_child(turn % get_child_count())
-	
-	if _current_player:
-		_current_player.connect('command', self, '_on_command')
-		_current_player.on_turn()
+	_turn_set(0)
 
-func _on_command(command: TurnBased_Command) -> void:
+func register(node: Node, front: bool) -> void:
+	if node in players:
+		return
+	
+	if front:
+		players.push_front(node)
+	else:
+		players.push_back(node)
+
+func execute(command: TurnBased_Command) -> void:
 	command.execute()
 	
 	if command.go_to_next:
@@ -39,5 +42,5 @@ func _turn_set(value: int) -> void:
 	
 	# Delay the signal for the idle frame
 	yield(get_tree(), 'idle_frame')
-	emit_signal('turn_changed')
+	emit_signal('turn_changed', players[turn % players.size()])
 
