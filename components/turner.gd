@@ -1,4 +1,4 @@
-class_name Component_Turner
+class_name PlatformerTurner
 extends Node2D
 
 signal direction_changed()
@@ -6,8 +6,8 @@ signal direction_changed()
 var direction := 1 setget _direction_set, _direction_get
 export(NodePath) var _root_sprite_path := NodePath()
 
-onready var _controller := NodE.get_sibling(self, Component_Controller) as Component_Controller
-onready var _velocity := NodE.get_sibling(self, Component_Velocity) as Component_Velocity
+onready var _controller := NodE.get_sibling(self, Controller) as Controller
+onready var _velocity := NodE.get_sibling(self, Velocity) as Velocity
 onready var _root_sprite := get_node_or_null(_root_sprite_path) as Node2D
 
 func _ready() -> void:

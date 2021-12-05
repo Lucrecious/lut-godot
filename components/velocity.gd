@@ -1,4 +1,4 @@
-class_name Component_Velocity
+class_name Velocity
 extends Node2D
 
 signal floor_hit()
@@ -39,6 +39,8 @@ onready var _body := get_parent()
 
 var _physics_process_func: FuncRef
 func _ready() -> void:
+	_top_down_mode_set(top_down_mode)
+	
 	if _body is KinematicBody2D:
 		_physics_process_func = funcref(self, '_physics_process_kinematicbody2d')
 	elif _body is Node2D:
@@ -48,7 +50,7 @@ func _ready() -> void:
 
 func move_pixels(vec: Vector2) -> Vector2:
 	if _body is KinematicBody2D:
-		return _body.move_and_slide(vec / get_physics_process_delta_time(), Vector2.UP, true)
+		return _body.move_and_slide(vec / get_physics_process_delta_time(), _up_direction, true)
 	
 	if _body is Node2D:
 		_body.position += vec

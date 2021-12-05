@@ -4,7 +4,7 @@ extends Spatial
 export(float) var stride_speed := 1.0
 export(float) var front_speed := 1.0
 
-onready var _controller := NodE.get_sibling_with_error(self, Component_Controller) as Component_Controller
+onready var _controller := NodE.get_sibling_with_error(self, Controller) as Controller
 onready var _velocity := NodE.get_sibling_with_error(self, Velocity3) as Velocity3
 
 func _physics_process(delta: float) -> void:

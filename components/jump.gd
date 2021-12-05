@@ -1,4 +1,4 @@
-class_name Component_Jump
+class_name PlatformerJump
 extends Node2D
 
 signal impulsed()
@@ -12,9 +12,9 @@ export(float) var _height := 10.0
 var _enabled := false
 
 onready var _body := get_parent() as KinematicBody2D
-onready var _controller := NodE.get_sibling(self, Component_Controller) as Component_Controller
-onready var _velocity := NodE.get_sibling(self, Component_Velocity) as Component_Velocity
-onready var _gravity := NodE.get_sibling(self, Component_Gravity) as Component_Gravity
+onready var _controller := NodE.get_sibling(self, Controller) as Controller
+onready var _velocity := NodE.get_sibling(self, Velocity) as Velocity
+onready var _gravity := NodE.get_sibling(self, Gravity) as Gravity
 
 var _jumps_available := 1
 var _time_left_floor_msec := -100
@@ -55,8 +55,8 @@ func enable() -> void:
 func _jump_pressed(action: String) -> void:
 	if not _enabled: return
 	
-	if not _can_jump(): return
 	if action != 'jump': return
+	if not _can_jump(): return
 	
 	_jumps_available -= 1
 	
@@ -71,12 +71,18 @@ func _jump_released(action: String) -> void:
 	
 	_velocity.value.y /= 2.5
 
-func impulse(use_custom_height := false, custom_height := 0.0) -> void:
+func get_impulse(use_custom_height := false, custom_height := 0.0) -> float:
 	var h := (custom_height if use_custom_height else _height)
 	var g := _gravity.up_gravity
-	var v0 := _velocity.value.y
+	var v0 := 0.0
 	
 	var initial_velocity := sqrt(v0*v0 + 2*g*h)
+	
+	return initial_velocity
+
+func impulse(use_custom_height := false, custom_height := 0.0) -> void:
+	var initial_velocity := get_impulse(use_custom_height, custom_height)
+	
 	_velocity.value.y = -initial_velocity
 	
 	emit_signal('impulsed')

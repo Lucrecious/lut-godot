@@ -1,4 +1,4 @@
-class_name Component_PriorityAnimationPlayer
+class_name PriorityAnimationPlayer
 extends AnimationPlayer
 
 signal animation_changEd(old, new)
@@ -48,6 +48,7 @@ var _play_priority := -1
 
 func _on_conditions_met(sender: SignalExpression) -> void:
 	if _play_priority > sender.get_index(): return
+	
 	
 	stop()
 	play(sender.condition_key)

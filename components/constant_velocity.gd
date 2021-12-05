@@ -1,4 +1,4 @@
-class_name Component_ConstantVelocity
+class_name ConstantVelocity
 extends Node2D
 
 onready var _velocity := Components.velocity(get_parent())

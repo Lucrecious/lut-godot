@@ -10,7 +10,7 @@ export(bool) var x_symmetry := true
 func _ready() -> void:
 	assert(direction != Vector2.ZERO)
 
-func is_pressed(controller: Component_Controller) -> bool:
+func is_pressed(controller: Controller) -> bool:
 	if not controller.is_action_pressed(action_name): return false
 	
 	if direction_type == 'any': return true

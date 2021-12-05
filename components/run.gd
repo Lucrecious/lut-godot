@@ -1,4 +1,4 @@
-class_name Component_Run
+class_name PlatformerRun
 extends Node2D
 
 signal velocity_calculated()
@@ -8,8 +8,8 @@ export(Resource) var _floor_parameters_untyped: Resource = null
 export(Resource) var _air_parameters_untyped: Resource = null
 
 onready var _body := get_parent() as KinematicBody2D
-onready var _controller := NodE.get_sibling(self, Component_Controller) as Component_Controller
-onready var _velocity := NodE.get_sibling(self, Component_Velocity) as Component_Velocity
+onready var _controller := NodE.get_sibling(self, Controller) as Controller
+onready var _velocity := NodE.get_sibling(self, Velocity) as Velocity
 onready var _floor_parameters := _floor_parameters_untyped as Parameters_Run
 onready var _air_parameters := _air_parameters_untyped as Parameters_Run
 

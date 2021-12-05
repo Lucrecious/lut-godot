@@ -1,4 +1,4 @@
-class_name Component_Disabler
+class_name ComponentDisabler
 extends Node
 
 onready var _parent := get_parent()

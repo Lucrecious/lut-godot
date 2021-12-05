@@ -7,9 +7,9 @@ export(float, 0.0, 100.0) var _dash_time_sec := .3
 export(float, 0.0, 5.0) var _pick_dir_sec := .3
 export(float, 0.0, 100.0) var _cooldown := 0.5
 
-onready var _controller := NodE.get_sibling(self, Component_Controller) as Component_Controller
-onready var _disabler := NodE.get_sibling(self, Component_Disabler) as Component_Disabler
-onready var _velocity := NodE.get_sibling(self, Component_Velocity) as Component_Velocity
+onready var _controller := NodE.get_sibling(self, Controller) as Controller
+onready var _disabler := NodE.get_sibling(self, ComponentDisabler) as ComponentDisabler
+onready var _velocity := NodE.get_sibling(self, Velocity) as Velocity
 
 var _pick_dir_timer: Timer
 var _dash_timer: Timer

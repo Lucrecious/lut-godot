@@ -1,4 +1,4 @@
-class_name Component_Health
+class_name Health
 extends Node
 
 signal zeroed()

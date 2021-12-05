@@ -1,4 +1,4 @@
-class_name Component_Extents
+class_name CollisionExtents
 extends CollisionShape2D
 
 
@@ -23,3 +23,5 @@ func get_as_global_rect() -> Rect2:
 	return Rect2(global_position - value, value * 2.0)
 
 func __null_set(__): return
+
+

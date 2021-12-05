@@ -1,2 +1,2 @@
-class_name Component_RootSprite
+class_name RootSprite
 extends Node2D

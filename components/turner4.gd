@@ -1,4 +1,4 @@
-class_name Component_Turner4
+class_name Turner4Directions
 extends Node2D
 
 signal direction_changed()
@@ -9,8 +9,8 @@ export(Array, NodePath) var _sprite_paths := []
 
 onready var _controller := Components.controller(get_parent())
 onready var _animation := NodE.get_node_with_error(
-	self, _animation_path, Component_PriorityAnimationPlayer)\
-	as Component_PriorityAnimationPlayer
+	self, _animation_path, PriorityAnimationPlayer)\
+	as PriorityAnimationPlayer
 
 onready var _sprites := _sprites_from_paths(_sprite_paths)
 

@@ -1,4 +1,4 @@
-class_name Component_Gravity
+class_name Gravity
 extends Node2D
 
 export(float) var up_gravity := 1.0
@@ -7,7 +7,7 @@ export(float) var terminal_velocity := 30.0
 
 var current := 0.0 setget ,_current_get
 
-onready var _velocity := NodE.get_sibling(self, Component_Velocity) as Component_Velocity
+onready var _velocity := NodE.get_sibling(self, Velocity) as Velocity
 
 var _filters := {}
 

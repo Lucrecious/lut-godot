@@ -5,9 +5,9 @@ signal died()
 signal revived()
 
 onready var _body := NodE.get_ancestor_with_error(self, KinematicBody2D) as KinematicBody2D
-onready var _disabler := NodE.get_sibling(self, Component_Disabler) as Component_Disabler
-onready var _health := NodE.get_sibling(self, Component_Health) as Component_Health
-onready var _velocity := NodE.get_sibling(self, Component_Velocity) as Component_Velocity
+onready var _disabler := NodE.get_sibling(self, ComponentDisabler) as ComponentDisabler
+onready var _health := NodE.get_sibling(self, Health) as Health
+onready var _velocity := NodE.get_sibling(self, Velocity) as Velocity
 
 var _is_dead := false
 
@@ -30,7 +30,7 @@ func _on_zeroed() -> void:
 	if collision:
 		collision.set_deferred('disabled', true)
 	
-	var gravity := NodE.get_sibling(self, Component_Gravity) as Component_Gravity
+	var gravity := NodE.get_sibling(self, Gravity) as Gravity
 	if gravity:
 		gravity.disable()
 	
@@ -49,7 +49,7 @@ func _on_revived(_amount: int) -> void:
 	if collision:
 		call_deferred('_wait_then_enable_collision', collision)
 	
-	var gravity := NodE.get_sibling(self, Component_Gravity) as Component_Gravity
+	var gravity := NodE.get_sibling(self, Gravity) as Gravity
 	if gravity:
 		gravity.enable()
 	

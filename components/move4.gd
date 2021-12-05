@@ -1,4 +1,4 @@
-class_name Component_Move4
+class_name Move4Directions
 extends Node2D
 
 onready var _controller := Components.controller(get_parent())

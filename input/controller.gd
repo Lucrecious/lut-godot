@@ -1,4 +1,4 @@
-class_name Component_Controller
+class_name Controller
 extends Node
 
 signal direction_changed(direction)

@@ -1,4 +1,4 @@
-class_name SubComponent_TurnerListener
+class_name PlatformerTurnerListener
 extends Node
 
 enum TurnBy {
@@ -15,7 +15,7 @@ export(Array, TurnBy) var _turn_bys := []
 
 var _animation_2_turnby := {}
 
-onready var _turner := get_parent() as Component_Turner
+onready var _turner := get_parent() as PlatformerTurner
 onready var _animation_player := get_node_or_null(_animation_player_path) as AnimationPlayer
 
 func _ready() -> void:
