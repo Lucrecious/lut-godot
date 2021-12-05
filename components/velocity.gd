@@ -9,6 +9,12 @@ signal x_direction_changed()
 signal y_direction_changed()
 
 export(bool) var top_down_mode := false setget _top_down_mode_set
+
+# At 0: All of the initial up movement is used
+# At 1: All of the returned movement after collision is used
+# At 0 < i < 1: A ratio of each
+export(float, 0.0, 1.0) var up_movement_damping := 1.0
+
 var _up_direction := Vector2.ZERO
 func _top_down_mode_set(value: bool) -> void:
 	top_down_mode = value
@@ -81,7 +87,9 @@ func _physics_process_kinematicbody2d() -> void:
 	var previous_is_on_wall := body.is_on_wall()
 	var previous_is_on_floor := body.is_on_floor()
 	
-	value = body.move_and_slide(value * units, _up_direction, true) / units
+	var new_value := body.move_and_slide(value * units, _up_direction, true) / units
+	var new_y := (up_movement_damping * new_value.y) + ((1.0 - up_movement_damping) * value.y)
+	value = Vector2(new_value.x, new_y) 
 	
 	var current_is_on_wall := body.is_on_wall()
 	var current_is_on_floor := body.is_on_floor()
