@@ -88,7 +88,9 @@ func _physics_process_kinematicbody2d() -> void:
 	var previous_is_on_floor := body.is_on_floor()
 	
 	var new_value := body.move_and_slide(value * units, _up_direction, true) / units
-	var new_y := (up_movement_damping * new_value.y) + ((1.0 - up_movement_damping) * value.y)
+	var new_y := new_value.y
+	if value.y < 0:
+		new_y = (up_movement_damping * new_value.y) + ((1.0 - up_movement_damping) * value.y)
 	value = Vector2(new_value.x, new_y) 
 	
 	var current_is_on_wall := body.is_on_wall()

@@ -16,7 +16,7 @@ onready var _controller := NodE.get_sibling(self, Controller) as Controller
 onready var _velocity := NodE.get_sibling(self, Velocity) as Velocity
 onready var _gravity := NodE.get_sibling(self, Gravity) as Gravity
 
-var _jumps_available := 1
+var _air_jumps := 1
 var _time_left_floor_msec := -100
 
 func _ready() -> void:
@@ -30,19 +30,19 @@ func _ready() -> void:
 		_controller.connect('action_just_released', self, '_jump_released')
 	
 	_velocity.connect('floor_left', self, 'reset_coyote_time')
-	_velocity.connect('floor_hit', self, '_reset_jumps')
+	_velocity.connect('floor_hit', self, 'reset_air_jumps')
 	
 	enable()
 
 func reset_coyote_time() -> void:
 	_time_left_floor_msec = OS.get_ticks_msec()
 
-func _reset_jumps() -> void:
-	_jumps_available = jump_count
+func reset_air_jumps() -> void:
+	_air_jumps = jump_count
 
 func _can_jump() -> bool:
-	if _jumps_available > 1: return true
-	if _jumps_available == 1 and (OS.get_ticks_msec() - _time_left_floor_msec) <  coyote_time_msec: return true
+	if _air_jumps >= 1: return true
+	if (OS.get_ticks_msec() - _time_left_floor_msec) <  coyote_time_msec: return true
 	if _body.is_on_floor(): return true
 	return false
 
@@ -58,7 +58,8 @@ func _jump_pressed(action: String) -> void:
 	if action != 'jump': return
 	if not _can_jump(): return
 	
-	_jumps_available -= 1
+	if not _body.is_on_floor():
+		_air_jumps -= 1
 	
 	impulse()
 
