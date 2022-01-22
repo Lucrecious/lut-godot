@@ -6,10 +6,24 @@ signal direction_h_changed()
 signal direction_v_changed()
 signal action_just_pressed(action)
 signal action_just_released(action)
+signal mouse_moved(event)
 
-export(Resource) var binded_actions: Resource = null
+export(bool) var raise_mouse_move := false
+
+export(Resource) var binded_actions: Resource = null setget _binded_actions_set
+func _binded_actions_set(value: Resource) -> void:
+	if binded_actions:
+		assert(false, 'can only be set once')
+		return
+	
+	binded_actions = value
+	var binded_actions_ := value as Controller_BindedActions
+	for action in binded_actions_.single_actions:
+		add_user_signal('action_%s_just_pressed' % action)
+		add_user_signal('action_%s_just_released' % action)
 
 var direction := Vector2.ZERO setget, _direction_get
+var mouse_position := Vector2()
 
 onready var _input := NodE.get_child_with_error(self, Input_Abstract) as Input_Abstract
 
@@ -43,18 +57,30 @@ func is_action_pressed(action: String) -> bool:
 
 func _on_unhandled_input(event: InputEvent) -> void:
 	if event.is_echo(): return
+	
+	if raise_mouse_move and event is InputEventMouseMotion:
+		mouse_position = event.position
+		emit_signal('mouse_moved', event)
+		return
+	
 	var action_name := _get_action_name(event)
 	
 	if action_name.empty(): return
 	
+	var is_direction_event := _is_direction_event(event)
+	
 	if event.is_pressed():
 		_pressed[action_name] = true
 		emit_signal('action_just_pressed', action_name)
+		if not is_direction_event:
+			emit_signal('action_%s_just_pressed' % action_name)
 	else:
 		_pressed.erase(action_name)
 		emit_signal('action_just_released', action_name)
+		if not is_direction_event:
+			emit_signal('action_%s_just_released' % action_name)
 	
-	if not _is_direction_event(event):
+	if not is_direction_event:
 		return
 	
 	var previous_direction := direction
