@@ -47,6 +47,8 @@ func use_custom_input(input: Input_Abstract) -> void:
 	
 	remove_child(_input)
 	_input.disconnect('unhandled_input', self, '_on_unhandled_input')
+	_input.queue_free()
+	
 	add_child(input)
 	
 	_input = input
