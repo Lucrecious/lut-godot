@@ -15,14 +15,14 @@ func enable() -> void:
 		return
 	
 	_enabled = true
-	_controller.connect('direction_changed', self, '_on_direction_changed')
-	_on_direction_changed(_controller.direction)
+	_controller.connect('direction1_changed', self, '_on_direction_changed')
+	_on_direction_changed(Vector2.ZERO)
 
 func disable() -> void:
 	if not _enabled:
 		return
 	
-	_controller.disconnect('direction_changed', self, '_on_direction_changed')
+	_controller.disconnect('direction1_changed', self, '_on_direction_changed')
 	_enabled = false
 	_velocity.value = Vector2.ZERO
 
