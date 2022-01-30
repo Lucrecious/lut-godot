@@ -57,7 +57,7 @@ func _dash() -> void:
 	set_physics_process(true)
 
 func _shoot_dash() -> void:
-	var dir := _controller.direction
+	var dir := _controller.get_direction(0)
 	
 	if dir != Vector2.ZERO:
 		_dash_velocity = dir.normalized() * (_distance / _dash_time_sec)

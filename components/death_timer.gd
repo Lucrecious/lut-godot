@@ -1,4 +1,4 @@
-class_name Component_DeathTimer
+class_name DeathTimer
 extends Node
 
 export(float) var sec := 1.0

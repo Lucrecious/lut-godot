@@ -25,5 +25,6 @@ func _unhandled_input(event: InputEvent) -> void:
 			return
 		
 		_direction = value
+		get_tree().set_input_as_handled()
 		emit_signal('direction_changed')
 		return

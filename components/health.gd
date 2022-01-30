@@ -4,6 +4,7 @@ extends Node
 signal zeroed()
 signal damaged(amount)
 signal increased(amount)
+signal changed()
 
 export(bool) var below_zero := false
 export(int) var current := 1
@@ -11,6 +12,9 @@ export(int) var current := 1
 var _last_health_modifier: Object = null
 
 func last_health_modifier() -> Object: return _last_health_modifier
+
+func damage(value: int, sender: Object) -> void:
+	current_set(current - value, sender)
 
 func current_set(value: int, sender: Object) -> void:
 	if not below_zero:
@@ -29,6 +33,8 @@ func current_set(value: int, sender: Object) -> void:
 	
 	if current == 0:
 		emit_signal('zeroed')
+	
+	emit_signal('changed')
 
 func __null_set(value: int): return
 

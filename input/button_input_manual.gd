@@ -1,10 +1,12 @@
 class_name ManualButtonInput
 extends IButtonInput
 
+export(PoolStringArray) var actions := PoolStringArray()
+
 var _pressed := {}
 
 func actions() -> PoolStringArray:
-	return PoolStringArray()
+	return actions
 
 func press(action: String) -> void:
 	if action in _pressed:

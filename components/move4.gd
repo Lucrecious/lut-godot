@@ -16,7 +16,7 @@ func enable() -> void:
 	
 	_enabled = true
 	_controller.connect('direction1_changed', self, '_on_direction_changed')
-	_on_direction_changed(Vector2.ZERO)
+	_on_direction_changed(_controller.get_direction(0))
 
 func disable() -> void:
 	if not _enabled:
