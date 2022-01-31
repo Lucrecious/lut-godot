@@ -15,7 +15,7 @@ func _notification(what):
 func _process(delta):
 	if not custom_multiplayer.has_network_peer():
 		return
-	custom_multiplayer.poll()
+	custom_multiplayer.call_deferred('poll')
 
 func _on_add_node(node):
 	var path = str(node.get_path())
