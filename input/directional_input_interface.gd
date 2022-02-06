@@ -4,5 +4,5 @@ extends Node
 signal direction_changed()
 
 func get_direction() -> Vector2:
-	assert(false, 'all interface methods must be implemented')
+	assert(false, 'must be implemented in derived class')
 	return Vector2.ZERO

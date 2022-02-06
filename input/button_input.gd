@@ -1,9 +1,16 @@
-class_name UserButtonInput
+class_name ButtonInput
 extends IButtonInput
 
+export(bool) var _handle_input := true
 export(PoolStringArray) var actions := PoolStringArray()
 
-func actions() -> PoolStringArray:
+func _ready() -> void:
+	if _handle_input:
+		return
+	
+	set_process_unhandled_input(false)
+
+func get_actions() -> PoolStringArray:
 	return actions
 
 func _unhandled_input(event: InputEvent) -> void:

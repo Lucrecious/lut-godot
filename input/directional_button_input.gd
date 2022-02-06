@@ -1,12 +1,19 @@
-class_name UserDirectionalInput
+class_name DirectionalButtonInput
 extends IDirectionalInput
 
 export(String) var left := ''
 export(String) var right := ''
 export(String) var up := ''
 export(String) var down := ''
+export(bool) var _handle_input := true
 
 onready var direction_actions := [left, right, up, down]
+
+func _ready() -> void:
+	if _handle_input:
+		return
+	
+	set_process_unhandled_input(false)
 
 var _direction := Vector2.ZERO
 func get_direction() -> Vector2:
