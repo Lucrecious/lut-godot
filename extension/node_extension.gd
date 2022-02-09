@@ -24,6 +24,9 @@ static func pause_interval(node: Node, sec: float) -> void:
 	
 	yield(node.get_tree().create_timer(sec), 'timeout')
 	
+	if not node or not is_instance_valid(node):
+		return
+	
 	node.set_process(processing)
 	node.set_physics_process(physics_processing)
 	node.set_process_input(input_processing)
