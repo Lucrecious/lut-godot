@@ -4,14 +4,12 @@ extends Node2D
 signal velocity_calculated()
 
 export(float) var speed := 10.0
-export(Resource) var _floor_parameters_untyped: Resource = null
-export(Resource) var _air_parameters_untyped: Resource = null
+export(Resource) var _floor_velocity_calculation: Resource = null
+export(Resource) var _air_velocity_calculation: Resource = null
 
 onready var _body := get_parent() as KinematicBody2D
 onready var _controller := NodE.get_sibling(self, Controller) as Controller
 onready var _velocity := NodE.get_sibling(self, Velocity) as Velocity
-onready var _floor_parameters := _floor_parameters_untyped as Parameters_Run
-onready var _air_parameters := _air_parameters_untyped as Parameters_Run
 
 var _direction := 0
 
@@ -41,40 +39,12 @@ func _calculate_velocity(direction: int, current_velocity: float) -> float:
 	var current_direction := sign(current_velocity)
 	
 	if _body.is_on_floor():
-		if not _floor_parameters:
+		if not _floor_velocity_calculation or not _floor_velocity_calculation.has_method('do'):
 			return _direction * speed
 		
-		if current_speed > speed:
-			var friction := 0.0
-			
-			if not _direction:
-				friction = _floor_parameters.friction
-			elif _direction == current_direction:
-				friction = _floor_parameters.parallel_friction
-			elif _direction != current_direction:
-				friction = _floor_parameters.unparallel_friction
-			
-			assert(friction)
-			
-			return current_velocity - current_direction * speed * friction * get_physics_process_delta_time()
-		
-		return lerp(current_velocity, _direction * speed, _floor_parameters.interpolation)
+		return _floor_velocity_calculation.do(current_velocity, speed, _controller.direction.x, get_physics_process_delta_time())
 	else:
-		if not _air_parameters:
+		if not _air_velocity_calculation or not _air_velocity_calculation.has_method('do'):
 			return _direction * speed
 		
-		if not _direction:
-			return current_velocity - current_direction * speed * _air_parameters.friction * get_physics_process_delta_time()
-		
-		if current_speed > speed:
-			var friction := 0.0
-			if _direction == current_direction:
-				friction = _air_parameters.parallel_friction
-			else:
-				friction = _air_parameters.unparallel_friction
-			
-			assert(friction)
-			
-			return current_velocity - current_direction * speed * friction * get_physics_process_delta_time()
-		
-		return lerp(current_velocity, speed * _direction, _air_parameters.interpolation)
+		return _air_velocity_calculation.do(current_velocity, speed, _controller.direction.x, get_physics_process_delta_time())

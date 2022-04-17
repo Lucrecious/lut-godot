@@ -1,11 +1,15 @@
-class_name Component_Dash
+class_name PlatformerDash
 extends Node2D
 
+signal dash_started()
+signal dash_finished()
 
 export(float, 0.5, 100.0) var _distance := 3.0
 export(float, 0.0, 100.0) var _dash_time_sec := .3
 export(float, 0.0, 5.0) var _pick_dir_sec := .3
 export(float, 0.0, 100.0) var _cooldown := 0.5
+
+export(bool) var only_allow_x := false
 
 onready var _controller := NodE.get_sibling(self, Controller) as Controller
 onready var _disabler := NodE.get_sibling(self, ComponentDisabler) as ComponentDisabler
@@ -15,6 +19,31 @@ var _pick_dir_timer: Timer
 var _dash_timer: Timer
 var _previous_dash_time_msec := int(-_cooldown * 1000)
 var is_dashing := false setget __null_set
+
+var _enabled := false
+
+func enable() -> void:
+	if _enabled:
+		return
+	
+	_enabled = true
+
+func disable() -> void:
+	if not _enabled:
+		return
+	
+	_enabled = false
+	
+	if not is_dashing:
+		return
+	
+	if not _pick_dir_timer.is_stopped():
+		_pick_dir_timer.stop()
+	
+	if not _dash_timer.is_stopped():
+		_dash_timer.stop()
+	
+	_dash_finished(false)
 
 func _ready() -> void:
 	assert(_controller, 'must have controller')
@@ -36,13 +65,25 @@ func _ready() -> void:
 	_pick_dir_timer.wait_time = _pick_dir_sec
 	_pick_dir_timer.connect('timeout', self, '_shoot_dash')
 	add_child(_pick_dir_timer)
+	
+	enable()
 
 var _dash_velocity := Vector2.ZERO
 func _on_action_just_pressed(action: String) -> void:
-	if (OS.get_ticks_msec() - _previous_dash_time_msec) < _cooldown * 1000: return
-	if is_dashing: return
-	if action != 'dodge': return
-	if _velocity.value == Vector2.ZERO and _controller.direction == Vector2.ZERO: return
+	if not _enabled:
+		return
+	
+	if (OS.get_ticks_msec() - _previous_dash_time_msec) < _cooldown * 1000:
+		return
+	
+	if is_dashing:
+		return
+	
+	if action != 'dodge':
+		return
+	
+	if _velocity.value == Vector2.ZERO and _controller.direction == Vector2.ZERO:
+		return
 	
 	_dash()
 
@@ -55,14 +96,23 @@ func _dash() -> void:
 	
 	_dash_velocity = _velocity.value / 4.0
 	set_physics_process(true)
+	emit_signal('dash_started')
 
 func _shoot_dash() -> void:
 	var dir := _controller.direction
 	
-	if dir != Vector2.ZERO:
-		_dash_velocity = dir.normalized() * (_distance / _dash_time_sec)
+	if only_allow_x:
+		if not is_equal_approx(dir.x, 0):
+			_dash_velocity.y = 0
+			_dash_velocity.x = sign(dir.x) * (_distance / _dash_time_sec)
+		else:
+			_dash_velocity.y = 0
+			_dash_velocity.x = sign(_dash_velocity.x) * (_distance / _dash_time_sec)
 	else:
-		_dash_velocity = _dash_velocity.normalized() * (_distance / _dash_time_sec)
+		if dir != Vector2.ZERO:
+			_dash_velocity = dir.normalized() * (_distance / _dash_time_sec)
+		else:
+			_dash_velocity = _dash_velocity.normalized() * (_distance / _dash_time_sec)
 	_dash_timer.start()
 
 
@@ -79,6 +129,8 @@ func _dash_finished(keep_velocity: bool) -> void:
 			_velocity.value /= 3.0
 	
 	is_dashing = false
+	
+	emit_signal('dash_finished')
 
 func _physics_process(delta: float) -> void:
 	_velocity.value = _dash_velocity
