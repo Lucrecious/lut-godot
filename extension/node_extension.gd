@@ -24,6 +24,9 @@ static func pause_interval(node: Node, sec: float) -> void:
 	
 	yield(node.get_tree().create_timer(sec), 'timeout')
 	
+	if not node or not is_instance_valid(node):
+		return
+	
 	node.set_process(processing)
 	node.set_physics_process(physics_processing)
 	node.set_process_input(input_processing)
@@ -80,7 +83,8 @@ static func get_sibling_by_name(node: Node, name: String) -> Node:
 	return sibling
 
 static func get_child(node: Node, type) -> Node:
-	if not node: return null
+	if not node:
+		return null
 	
 	for child in node.get_children():
 		if not child is type: continue
@@ -88,6 +92,20 @@ static func get_child(node: Node, type) -> Node:
 	
 	return null
 
+static func get_children(node: Node, type) -> Array:
+	if not node:
+		return []
+	
+	var children := []
+	for i in node.get_child_count():
+		var child := node.get_child(i)
+		if not child is type:
+			continue
+		
+		children.push_back(child)
+	
+	return children
+	
 static func get_child_with_error(node: Node, type) -> Node:
 	var child := get_child(node, type)
 	assert(child, 'must be found')

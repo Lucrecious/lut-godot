@@ -99,7 +99,7 @@ func _dash() -> void:
 	emit_signal('dash_started')
 
 func _shoot_dash() -> void:
-	var dir := _controller.direction
+	var dir := _controller.get_direction(0)
 	
 	if only_allow_x:
 		if not is_equal_approx(dir.x, 0):

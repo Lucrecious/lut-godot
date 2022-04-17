@@ -1,4 +1,4 @@
-class_name Component_Death
+class_name Death
 extends Node2D
 
 signal died()

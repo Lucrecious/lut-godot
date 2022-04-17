@@ -8,20 +8,12 @@ signal wall_left()
 signal x_direction_changed()
 signal y_direction_changed()
 
-export(bool) var top_down_mode := false setget _top_down_mode_set
+export(Vector2) var up_direction := Vector2.UP
 
 # At 0: All of the initial up movement is used
 # At 1: All of the returned movement after collision is used
 # At 0 < i < 1: A ratio of each
 export(float, 0.0, 1.0) var up_movement_damping := 1.0
-
-var _up_direction := Vector2.ZERO
-func _top_down_mode_set(value: bool) -> void:
-	top_down_mode = value
-	if top_down_mode:
-		_up_direction = Vector2.ZERO
-	else:
-		_up_direction = Vector2.UP
 
 export(float) var units := 1.0
 export(Vector2) var value := Vector2.ZERO
@@ -45,8 +37,6 @@ onready var _body := get_parent()
 
 var _physics_process_func: FuncRef
 func _ready() -> void:
-	_top_down_mode_set(top_down_mode)
-	
 	if _body is KinematicBody2D:
 		_physics_process_func = funcref(self, '_physics_process_kinematicbody2d')
 	elif _body is Node2D:
@@ -56,7 +46,7 @@ func _ready() -> void:
 
 func move_pixels(vec: Vector2) -> Vector2:
 	if _body is KinematicBody2D:
-		return _body.move_and_slide(vec / get_physics_process_delta_time(), _up_direction, true)
+		return _body.move_and_slide(vec / get_physics_process_delta_time(), up_direction)
 	
 	if _body is Node2D:
 		_body.position += vec
@@ -87,7 +77,8 @@ func _physics_process_kinematicbody2d() -> void:
 	var previous_is_on_wall := body.is_on_wall()
 	var previous_is_on_floor := body.is_on_floor()
 	
-	var new_value := body.move_and_slide(value * units, _up_direction, true) / units
+	var new_value := body.move_and_slide(value * units, up_direction, true) / units
+	
 	var new_y := new_value.y
 	if value.y < 0:
 		new_y = (up_movement_damping * new_value.y) + ((1.0 - up_movement_damping) * value.y)

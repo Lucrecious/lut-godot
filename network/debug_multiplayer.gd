@@ -1,3 +1,4 @@
+class_name DebugMultiplayerAPI
 extends Node
 
 func _init():
@@ -12,8 +13,9 @@ func _notification(what):
 		get_tree().disconnect("node_added", self, "_on_add_node")
 
 func _process(delta):
-	if not custom_multiplayer.has_network_peer(): return
-	custom_multiplayer.poll()
+	if not custom_multiplayer.has_network_peer():
+		return
+	custom_multiplayer.call_deferred('poll')
 
 func _on_add_node(node):
 	var path = str(node.get_path())
