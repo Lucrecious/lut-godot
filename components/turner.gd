@@ -18,7 +18,7 @@ func _ready() -> void:
 	connect('direction_changed', self, '_update_sprite_flip')
 
 func update_direction_by_controller() -> float:
-	var x_sign := sign(_controller.direction.x)
+	var x_sign := sign(_controller.get_direction(0).x)
 	_direction_set(x_sign)
 	return x_sign
 

@@ -9,6 +9,8 @@ export(Array, NodePath) var _nodes_path := []
 export(Array, String) var _properties := []
 export(String) var _expression_format := ''
 
+export(bool) var debug_print := false
+
 var _nodes := []
 
 var _expression: Expression
@@ -35,6 +37,11 @@ func on_condition_changed(_1=null,_2=null,_3=null,_4=null,_5=null,_6=null) -> vo
 	var new_is_true := is_true()
 	if new_is_true == _is_true: return
 	_is_true = new_is_true
+	
+	if debug_print:
+		print('%s - on_condition_changed - is_true(): %s' % [get_path(), new_is_true])
+		print('  Expression: %s' % [_expression_format])
+		print()
 	
 	if _is_true:
 		emit_signal('conditions_met')

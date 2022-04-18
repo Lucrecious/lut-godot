@@ -11,8 +11,6 @@ export(float) var _kick_off_speed := 20.0
 export(float) var _kick_off_height := 10.0
 export(float) var _run_up_height := 1.0
 
-export(bool) var reset_air_jumps := true
-
 onready var _body := get_parent() as KinematicBody2D
 onready var _controller := NodE.get_sibling(self, Controller) as Controller
 onready var _velocity := NodE.get_sibling(self, Velocity) as Velocity
@@ -34,7 +32,7 @@ func _ready() -> void:
 	assert(_jump, 'must have a jump sibling')
 	assert(_disabler, 'must have a disabler sibling')
 	
-	_controller.connect('direction_changed', self, '_update_pushing_direction')
+	_controller.connect('direction1_changed', self, '_update_pushing_direction')
 	_velocity.connect('wall_hit', self, '_update_wall_direction')
 	_velocity.connect('wall_left', self, '_update_wall_direction')
 	_velocity.connect('floor_hit', self, '_update_is_on_floor')
@@ -108,9 +106,6 @@ func _grip_wall() -> void:
 	set_physics_process(true)
 	_physics_process(get_physics_process_delta_time())
 	
-	if reset_air_jumps:
-		_jump.reset_air_jumps()
-	
 	emit_signal('wall_gripped')
 	
 	return
@@ -169,7 +164,7 @@ func enable() -> void:
 	if _enabled: return
 	_enabled = true
 	
-	_update_pushing_direction(_controller.direction)
+	_update_pushing_direction(_controller.get_direction(0))
 	_update_wall_direction()
 
 

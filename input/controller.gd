@@ -24,7 +24,6 @@ onready var button_input := NodE.get_child(self, ButtonInput) as ButtonInput
 onready var directionals := NodE.get_children(self, IDirectionalInput)
 
 var _pressed_cache := {}
-var _directions_cache := []
 
 func disable() -> void:
 	self.user = User.None
@@ -37,7 +36,7 @@ func clear_all_input() -> void:
 			release(action)
 	
 	for i in directionals.size():
-		var direction := _directions_cache[i] as Vector2
+		var direction := directionals[i].get_direction() as Vector2
 		if not direction.is_equal_approx(Vector2.ZERO):
 			set_direction(i, Vector2.ZERO)
 
@@ -69,7 +68,7 @@ func _release(action: String) -> void:
 	emit_signal('action_just_released', action)
 
 func get_direction(index: int) -> Vector2:
-	return _directions_cache[index]
+	return directionals[index].get_direction()
 
 func set_direction(index: int, value: Vector2) -> void:
 	if user != User.Computer:
@@ -78,7 +77,6 @@ func set_direction(index: int, value: Vector2) -> void:
 	_set_direction(index, value)
 
 func _set_direction(index: int, value: Vector2) -> void:
-	_directions_cache[index] = value
 	emit_signal('direction%d_changed' % (index + 1), value)
 
 func _ready() -> void:
@@ -93,7 +91,6 @@ func _ready() -> void:
 			name = 'vector',
 			type = TYPE_VECTOR2
 		}])
-		_directions_cache.push_back(Vector2.ZERO)
 	
 	connect('user_changed', self, '_on_user_changed')
 	_on_user_changed()
