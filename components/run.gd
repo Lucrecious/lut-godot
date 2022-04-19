@@ -42,7 +42,7 @@ func _calculate_velocity(direction: int, current_velocity: float) -> float:
 		if not _floor_velocity_calculation or not _floor_velocity_calculation.has_method('do'):
 			return _direction * speed
 		
-		return _floor_velocity_calculation.do(current_velocity, speed, _controller.direction.x, get_physics_process_delta_time())
+		return _floor_velocity_calculation.do(current_velocity, speed, _controller.get_direction(0).x, get_physics_process_delta_time())
 	else:
 		if not _air_velocity_calculation or not _air_velocity_calculation.has_method('do'):
 			return _direction * speed
