@@ -50,7 +50,7 @@ func _on_conditions_met(sender: SignalExpression) -> void:
 	if _play_priority > sender.get_index(): return
 	
 	
-	stop()
+	#stop()
 	play(sender.condition_key)
 	
 	_play_priority = sender.get_index()
@@ -60,8 +60,10 @@ var _callback_method := ''
 func callback_on_finished(animation_name: String, sender: Node, object: Object, callback: String) -> bool:
 	if _play_priority > sender.get_index(): return false
 	
-	stop()
+	#stop()
+	_animation_callback()
 	play(animation_name)
+	seek(0, true)
 	
 	_play_priority = sender.get_index()
 	_playing_for_callback = true
