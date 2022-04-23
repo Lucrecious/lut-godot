@@ -27,8 +27,15 @@ func _ready() -> void:
 func play(name: String = "", custom_blend: float = -1, custom_speed: float = 1.0, from_end: bool = false):
 	if current_animation == name: return
 	assert(has_animation(name))
+	var blend_time := custom_blend if custom_blend >= 0 else get_blend_time(current_animation, name)
 	var old := current_animation
-	.play(name, custom_blend, custom_speed, from_end)
+	
+	# this ensures that the previous blend doesn't interfere with current blend.
+	# i.e. if run transitions to idle with 1 second blend, but idle to jump transitions with
+	# 0 blend, this forces the 0 blend to override 
+	if blend_time == 0:
+		.stop()
+	.play(name, blend_time, custom_speed, from_end)
 	emit_signal('animation_changEd', old, name)
 
 func stop(reset := true) -> void:
