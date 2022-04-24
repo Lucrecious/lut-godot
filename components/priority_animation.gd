@@ -83,7 +83,9 @@ func _on_animation_changEd(_old_animation: String, _new_animation: String) -> vo
 	_animation_callback()
 
 func _animation_callback() -> void:
-	if not _playing_for_callback: return
+	if not _playing_for_callback:
+		return
+	
 	_playing_for_callback = false
 	
 	var index := _play_priority
