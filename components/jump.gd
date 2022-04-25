@@ -95,9 +95,9 @@ func get_impulse(use_custom_height := false, custom_height := 0.0) -> float:
 	var g := _gravity.up_gravity
 	var v0 := 0.0
 	
-	var initial_velocity := sqrt(v0*v0 + 2*g*h)
+	var impulse_velocity := sqrt(v0*v0 + 2*g*h)
 	
-	return initial_velocity
+	return impulse_velocity
 
 func impulse(use_custom_height := false, custom_height := 0.0) -> void:
 	var initial_velocity := get_impulse(use_custom_height, custom_height)

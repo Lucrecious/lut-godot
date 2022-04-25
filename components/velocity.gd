@@ -77,24 +77,17 @@ func _physics_process_kinematicbody2d() -> void:
 	var previous_is_on_wall := body.is_on_wall()
 	var previous_is_on_floor := body.is_on_floor()
 	
+	var before_impact_value := value
 	var new_value := body.move_and_slide(value * units, up_direction, true) / units
 	
 	var new_y := new_value.y
 	if value.y < 0:
 		new_y = (up_movement_damping * new_value.y) + ((1.0 - up_movement_damping) * value.y)
-	value = Vector2(new_value.x, new_y) 
 	
 	var current_is_on_wall := body.is_on_wall()
 	var current_is_on_floor := body.is_on_floor()
-	var current_value := value
 	
-	if sign(_previous_value.x) != sign(current_value.x):
-		emit_signal('x_direction_changed')
-	
-	if sign(_previous_value.y) != sign(current_value.y):
-		emit_signal('y_direction_changed')
-	
-	_previous_value = current_value
+	value = Vector2(new_value.x, new_y)
 	
 	if not previous_is_on_floor and current_is_on_floor:
 		emit_signal('floor_hit')
@@ -106,4 +99,15 @@ func _physics_process_kinematicbody2d() -> void:
 		emit_signal('wall_hit')
 	
 	if previous_is_on_wall and not current_is_on_wall:
-		emit_signal('wall_left')
+		emit_signal('wall_left') 
+	
+	if sign(_previous_value.x) != sign(value.x):
+		emit_signal('x_direction_changed')
+	
+	if sign(_previous_value.y) != sign(value.y):
+		emit_signal('y_direction_changed')
+	
+	_previous_value = value
+
+func _to_string() -> String:
+	return '%s: %s' % ['Velocity', value]

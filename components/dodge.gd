@@ -4,12 +4,14 @@ export(String) var anim_name := ''
 export(String) var action_name := ''
 export(NodePath) var _priority_node_path := NodePath()
 export(float) var dodge_velocity := 0.0
+export(bool) var allow_gravity := false
 
 onready var _priority_node := get_node(_priority_node_path)
 onready var _animation := Components.priority_animation_player(get_parent())
 onready var _controller := Components.controller(get_parent())
 onready var _disabler := Components.disabler(get_parent())
 onready var _velocity := Components.velocity(get_parent())
+onready var _gravity := NodE.get_sibling_with_error(self, Gravity) as Gravity
 
 var _enabled := false
 var _is_dodging := false
@@ -57,11 +59,15 @@ func _dodge(side: int) -> void:
 	set_physics_process(true)
 	_disabler.disable_below(self)
 	
+	if allow_gravity:
+		_gravity.enable()
+	
 	_animation.callback_on_finished(anim_name, _priority_node, self, '_finish_dodge')
 
 func _physics_process(delta: float) -> void:
 	_velocity.value.x = dodge_velocity * _dodge_side
-	_velocity.value.y = 1
+	if not allow_gravity:
+		_velocity.value.y = 0
 
 func _finish_dodge() -> void:
 	if not _enabled:
