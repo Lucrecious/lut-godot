@@ -23,6 +23,9 @@ func _ready() -> void:
 		_nodes.push_back(get_node_or_null(_nodes_path[i]))
 		property_strs.push_back('_nodes[%d].%s' % [i, _properties[i]])
 	
+	if debug_print:
+		print(property_strs)
+	
 	if _expression_format.empty():
 		_expression_format = 'false'
 	
