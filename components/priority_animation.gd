@@ -3,6 +3,9 @@ extends AnimationPlayer
 
 signal animation_changEd(old, new)
 
+# The last animation that was played but not stopped explicitly
+var last_unstopped_animation_name := ''
+
 func _ready() -> void:
 	connect('animation_changEd', self, '_on_animation_changEd')
 	connect('animation_finished', self, '_on_animation_finished')
@@ -27,7 +30,7 @@ func _ready() -> void:
 func play(name: String = "", custom_blend: float = -1, custom_speed: float = 1.0, from_end: bool = false):
 	if current_animation == name: return
 	assert(has_animation(name))
-	var blend_time := custom_blend if custom_blend >= 0 else get_blend_time(current_animation, name)
+	var blend_time := custom_blend if custom_blend >= 0 else get_blend_time(last_unstopped_animation_name, name)
 	var old := current_animation
 	
 	# this ensures that the previous blend doesn't interfere with current blend.
@@ -35,10 +38,13 @@ func play(name: String = "", custom_blend: float = -1, custom_speed: float = 1.0
 	# 0 blend, this forces the 0 blend to override 
 	if blend_time == 0:
 		.stop()
+	
+	last_unstopped_animation_name = name
 	.play(name, blend_time, custom_speed, from_end)
 	emit_signal('animation_changEd', old, name)
 
 func stop(reset := true) -> void:
+	last_unstopped_animation_name = ''
 	if not is_playing(): return
 	var current := current_animation
 	.stop(reset)
