@@ -10,6 +10,7 @@ onready var _velocity := Components.velocity(get_parent())
 onready var _disabler := Components.disabler(get_parent())
 onready var _jump := NodE.get_sibling_with_error(self, PlatformerJump) as PlatformerJump
 onready var _gravity := NodE.get_sibling_with_error(self, Gravity) as Gravity
+onready var _turner := NodE.get_sibling(self, PlatformerTurner) as PlatformerTurner
 
 var _enabled := false
 var _jump_direction := 0
@@ -31,6 +32,7 @@ func disable() -> void:
 		return
 	
 	set_physics_process(false)
+	_turner.enable()
 	_controller.disconnect('jump_just_pressed', self, '_on_jump_just_pressed')
 	_enabled = false
 
@@ -45,13 +47,19 @@ func _on_jump_just_pressed() -> void:
 	_gravity.enable()
 	
 	set_physics_process(true)
+	_velocity.value.x = _jump_direction * speed_x
 	_jump.impulse(true, height)
+	_turner.direction = _jump_direction
+	_turner.disable()
+	
 
 func _physics_process(delta: float) -> void:
 	var lock_msec := floor(1000 * jump_lock_distance_x / speed_x)
 	if _wall_jump_msec_passed > lock_msec:
 		set_physics_process(false)
 		_disabler.enable_below(self)
+		_turner.enable()
+		_turner.update_direction_by_controller()
 		return
 	
 	_wall_jump_msec_passed += floor(delta * 1000)

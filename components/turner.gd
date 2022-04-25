@@ -17,6 +17,14 @@ func _ready() -> void:
 	
 	connect('direction_changed', self, '_update_sprite_flip')
 
+onready var _enabled := true
+
+func enable() -> void:
+	_enabled = true
+
+func disable() -> void:
+	_enabled = false
+
 func update_direction_by_controller() -> float:
 	var x_sign := sign(_controller.get_direction(0).x)
 	_direction_set(x_sign)
@@ -28,15 +36,18 @@ func update_direction_by_velocity() -> void:
 	_direction_set(x_sign)
 
 func _update_sprite_flip() -> void:
-	if direction == 0: return
-	
 	_root_sprite.scale.x = abs(_root_sprite.scale.x) * direction
 
 func _direction_get() -> int:
 	return direction
 
 func _direction_set(dir: int) -> void:
-	if dir == 0: return
-	if dir == direction: return
+	if not _enabled:
+		return
+	
+	if dir == 0:
+		return
+	if dir == direction:
+		return
 	direction = dir
 	emit_signal('direction_changed')

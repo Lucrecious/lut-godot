@@ -1,12 +1,12 @@
 class_name PlatformerWallGrip
 extends Node2D
 
-const LoseGripDelay_Msec := 200
-
 signal gripped
 signal released
 
 const LEAVE_WALL_MSEC := 200
+
+export(float) var run_up_height := .5
 
 onready var _body := get_parent() as KinematicBody2D
 onready var _controller := NodE.get_sibling(self, Controller) as Controller
@@ -43,7 +43,11 @@ func disable() -> void:
 	if not _enabled:
 		return
 	
+	var was_gripping := _is_gripping
 	_is_gripping = false
+	if was_gripping:
+		emit_signal('released')
+	
 	_grip_direction = 0
 	set_physics_process(false)
 	_velocity.disconnect('wall_hit', self, '_on_wall_hit')
@@ -81,21 +85,14 @@ func _on_wall_hit() -> void:
 	_grip_wall()
 	
 func _on_wall_left() -> void:
-	var previous_is_gripping := _is_gripping
 	disable()
-	if not _is_gripping and previous_is_gripping:
-		emit_signal('released')
-	
 	enable()
 
 func _on_floor_left() -> void:
 	_grip_wall()
 
 func _on_floor_hit() -> void:
-	var previous_is_gripping := _is_gripping
 	disable()
-	if not _is_gripping and previous_is_gripping:
-		emit_signal('released')
 	enable()
 
 func _grip_wall() -> void:
@@ -117,9 +114,9 @@ func _grip_wall() -> void:
 	_is_gripping = true
 	_grip_direction = -_get_wall_direction()
 	set_physics_process(true)
-	var impulse := _jump.get_impulse(true, .5)
+	var impulse := _jump.get_impulse(true, run_up_height)
 	if _velocity.value.y > -impulse:
-		_velocity.value.y = -_jump.get_impulse(true, .5)
+		_velocity.value.y = -impulse
 	
 	emit_signal('gripped')
 
@@ -131,6 +128,7 @@ func _physics_process(delta: float) -> void:
 		_leave_wall_count_msec = 0
 	
 	if _leave_wall_count_msec > LEAVE_WALL_MSEC:
+		_velocity.value.x = -_grip_direction
 		return
 	
 	_velocity.value.x = _grip_direction
