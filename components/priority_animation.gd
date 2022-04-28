@@ -3,6 +3,8 @@ extends AnimationPlayer
 
 signal animation_changEd(old, new)
 
+export(bool) var debug_print := false
+
 # The last animation that was played but not stopped explicitly
 var last_unstopped_animation_name := ''
 
@@ -38,6 +40,10 @@ func play(name: String = "", custom_blend: float = -1, custom_speed: float = 1.0
 	# 0 blend, this forces the 0 blend to override 
 	if blend_time == 0:
 		.stop()
+	
+	
+	if debug_print:
+		printt('playing: "%s", from last unstopped "%s".' % [name, last_unstopped_animation_name])
 	
 	last_unstopped_animation_name = name
 	.play(name, blend_time, custom_speed, from_end)
