@@ -45,11 +45,11 @@ func _on_floor_hit() -> void:
 	_jumped = false
 
 func _can_jump() -> bool:
-	if _jumped:
-		return false
-	
 	if _body.is_on_floor():
 		return true
+	
+	if _jumped:
+		return false
 	
 	if (OS.get_ticks_msec() - _time_left_floor_msec) <  coyote_time_msec:
 		return true
