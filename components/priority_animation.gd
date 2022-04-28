@@ -91,6 +91,11 @@ func callback_on_finished(animation_name: String, sender: Node, object: Object, 
 	
 	return true
 
+func callback_on_finished_by_node(sender: PriorityNodePlaceholder, object: Object, callback: String) -> bool:
+	assert(not sender.animation.empty())
+	return callback_on_finished(sender.animation, sender, object, callback)
+	
+
 func _on_animation_changEd(_old_animation: String, _new_animation: String) -> void:
 	_animation_callback()
 

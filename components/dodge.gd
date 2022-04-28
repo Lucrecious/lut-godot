@@ -1,6 +1,5 @@
 extends Node2D
 
-export(String) var anim_name := ''
 export(String) var action_name := ''
 export(NodePath) var _priority_node_path := NodePath()
 export(float) var dodge_velocity := 0.0
@@ -62,7 +61,7 @@ func _dodge(side: int) -> void:
 	if allow_gravity:
 		_gravity.enable()
 	
-	_animation.callback_on_finished(anim_name, _priority_node, self, '_finish_dodge')
+	_animation.callback_on_finished_by_node(_priority_node, self, '_finish_dodge')
 
 func _physics_process(delta: float) -> void:
 	_velocity.value.x = dodge_velocity * _dodge_side
