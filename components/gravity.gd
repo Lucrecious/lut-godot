@@ -33,8 +33,9 @@ func _physics_process(delta: float) -> void:
 	if _velocity.y < terminal_velocity:
 		_velocity.y += g
 	else:
-		_velocity.y -= g / 6.5
-		_velocity.y = max(terminal_velocity, _velocity.y)
+		if _velocity.y < terminal_velocity:
+			_velocity.y -= g / 6.5
+			_velocity.y = max(terminal_velocity, _velocity.y) + .01
 
 func _current_get() -> float:
 	if _velocity.y > 0: return _filter(down_gravity)

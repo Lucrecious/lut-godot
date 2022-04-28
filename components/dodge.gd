@@ -23,6 +23,7 @@ func _ready():
 func enable() -> void:
 	if _enabled:
 		return
+	_is_dodging = false
 	_enabled = true
 	_controller.connect('%s_just_pressed' % action_name, self, '_on_dodge_just_pressed')
 	_controller.connect('direction1_changed', self, '_on_direction1_changed')
@@ -32,6 +33,7 @@ func disable() -> void:
 		return
 	
 	set_physics_process(false)
+	_is_dodging = false
 	_controller.disconnect('%s_just_pressed' % action_name, self, '_on_dodge_just_pressed')
 	_controller.disconnect('direction1_changed', self, '_on_direction1_changed')
 	_enabled = false
