@@ -56,6 +56,7 @@ mouse_filter = 1
 [node name="TileMode" type="Control" parent="HUDLayer/HUD/ActionModes"]
 anchor_right = 1.0
 anchor_bottom = 1.0
+focus_mode = 2
 script = ExtResource( 6 )
 _preview_map_path = NodePath("../../../../PreviewTileMap")
 _map_cursor_path = NodePath("../../../../PreviewTileMap/TileMapCursor")

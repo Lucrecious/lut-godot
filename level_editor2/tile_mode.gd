@@ -63,32 +63,59 @@ func _gui_input(event: InputEvent) -> void:
 		_is_dragging = true
 		_last_coords_clicked = map_position
 		_set_cellsv(_preview_map, [map_position], _current_tile.id, brush_thickness)
+		grab_focus()
 		
-	if not event.is_pressed()\
+	elif not event.is_pressed()\
 		and mouse_event is InputEventMouseButton and event.button_index == BUTTON_LEFT:
-			_is_dragging = false
+		_is_dragging = false
+		
+		for p in _preview_map.get_used_cells():
+			tilemap.set_cellv(p, _current_tile.id)
+		var used_rect := _preview_map.get_used_rect()
+		tilemap.update_bitmask_region(used_rect.position, used_rect.position + used_rect.size)
 			
-			for p in _preview_map.get_used_cells():
-				tilemap.set_cellv(p, _current_tile.id)
-			var used_rect := _preview_map.get_used_rect()
-			tilemap.update_bitmask_region(used_rect.position, used_rect.position + used_rect.size)
-			
-			_preview_map.clear()
+		_preview_map.clear()
+		
+		release_focus()
+		
 	elif mouse_event is InputEventMouseMotion:
 		if _is_dragging:
 			if draw_mode == Mode.FreeHand:
 				_set_cell_line(_preview_map, _previous_mouse_coords, map_position, _current_tile.id, brush_thickness)
 			elif draw_mode == Mode.Line:
 				_preview_map.clear()
-				if map_position.is_equal_approx(_last_coords_clicked):
-					_set_cellsv(_preview_map, [map_position], _current_tile.id, brush_thickness)
-				else:
-					_set_cell_line(_preview_map, _last_coords_clicked, map_position, _current_tile.id, brush_thickness)
-			elif draw_mode == Mode.Rectangle:
-				_preview_map.clear()
+				
 				var a := _last_coords_clicked
 				var b := map_position
 				var delta := b - a
+				
+				if mouse_event.shift:
+					if abs(delta.x) > abs(delta.y):
+						b.y = a.y
+						delta.y = 0
+					else:
+						b.x = a.x
+						delta.x = 0
+				
+				if a.is_equal_approx(b):
+					_set_cellsv(_preview_map, [a], _current_tile.id, brush_thickness)
+				else:
+					_set_cell_line(_preview_map, a, b, _current_tile.id, brush_thickness)
+			elif draw_mode == Mode.Rectangle:
+				_preview_map.clear()
+				
+				var a := _last_coords_clicked
+				var b := map_position
+				var delta := b - a
+				
+				if mouse_event.shift:
+					if abs(delta.x) > abs(delta.y):
+						b.y = a.y + abs(delta.x)
+					else:
+						b.x = a.x + abs(delta.y)
+					
+					delta = b - a
+				
 				if a.is_equal_approx(b):
 					_set_cellsv(_preview_map, [a], _current_tile.id, 1)
 				elif is_equal_approx(delta.x, 0) or is_equal_approx(delta.y, 0):
