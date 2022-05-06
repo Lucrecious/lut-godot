@@ -1,4 +1,4 @@
-[gd_scene load_steps=7 format=2]
+[gd_scene load_steps=13 format=2]
 
 [ext_resource path="res://lut/level_editor2/level_editor_control.gd" type="Script" id=1]
 [ext_resource path="res://lut/level_editor2/level_editor2.gd" type="Script" id=2]
@@ -6,6 +6,12 @@
 [ext_resource path="res://lut/level_editor2/tile_palette.gd" type="Script" id=4]
 [ext_resource path="res://lut/level_editor2/tilemap_cursor.gd" type="Script" id=5]
 [ext_resource path="res://lut/level_editor2/tile_mode.gd" type="Script" id=6]
+[ext_resource path="res://lut/level_editor2/tile_draw_mode.tres" type="ButtonGroup" id=7]
+[ext_resource path="res://lut/level_editor2/assets/rectangle.svg" type="Texture" id=8]
+[ext_resource path="res://lut/level_editor2/assets/brush.svg" type="Texture" id=9]
+[ext_resource path="res://lut/level_editor2/assets/line.svg" type="Texture" id=10]
+[ext_resource path="res://lut/level_editor2/tile_draw_mode_button.gd" type="Script" id=11]
+[ext_resource path="res://lut/level_editor2/brush_thickness_spinner.gd" type="Script" id=12]
 
 [node name="LevelEditor" type="CanvasLayer"]
 layer = 10
@@ -16,6 +22,8 @@ script = ExtResource( 2 )
 
 [node name="PreviewTileMap" type="TileMap" parent="."]
 self_modulate = Color( 1, 1, 1, 0.47451 )
+collision_layer = 0
+collision_mask = 0
 format = 1
 
 [node name="TileMapCursor" type="Node2D" parent="PreviewTileMap"]
@@ -51,7 +59,6 @@ anchor_bottom = 1.0
 script = ExtResource( 6 )
 _preview_map_path = NodePath("../../../../PreviewTileMap")
 _map_cursor_path = NodePath("../../../../PreviewTileMap/TileMapCursor")
-draw_mode = 2
 
 [node name="Margin" type="MarginContainer" parent="HUDLayer/HUD"]
 anchor_right = 1.0
@@ -70,20 +77,20 @@ margin_bottom = 350.0
 mouse_filter = 2
 
 [node name="PaletteToolbox" type="VBoxContainer" parent="HUDLayer/HUD/Margin/MainView"]
-margin_right = 166.0
+margin_right = 182.0
 margin_bottom = 340.0
 mouse_filter = 2
 custom_constants/separation = 10
 
 [node name="EditModeLabel" type="Label" parent="HUDLayer/HUD/Margin/MainView/PaletteToolbox"]
-margin_right = 166.0
+margin_right = 182.0
 margin_bottom = 14.0
 size_flags_vertical = 0
 text = "Edit Mode"
 
 [node name="Level" type="OptionButton" parent="HUDLayer/HUD/Margin/MainView/PaletteToolbox"]
 margin_top = 24.0
-margin_right = 166.0
+margin_right = 182.0
 margin_bottom = 44.0
 focus_mode = 0
 mouse_filter = 1
@@ -93,13 +100,84 @@ selected = 0
 script = ExtResource( 3 )
 _level_editor_path = NodePath("../../../../../..")
 
-[node name="TilePalette" type="ItemList" parent="HUDLayer/HUD/Margin/MainView/PaletteToolbox"]
+[node name="Tabs" type="TabContainer" parent="HUDLayer/HUD/Margin/MainView/PaletteToolbox"]
 margin_top = 54.0
-margin_right = 166.0
+margin_right = 182.0
 margin_bottom = 340.0
+size_flags_vertical = 3
+tab_align = 0
+
+[node name="Tile Palette" type="Tabs" parent="HUDLayer/HUD/Margin/MainView/PaletteToolbox/Tabs"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_left = 4.0
+margin_top = 32.0
+margin_right = -4.0
+margin_bottom = -4.0
+
+[node name="VBox" type="VBoxContainer" parent="HUDLayer/HUD/Margin/MainView/PaletteToolbox/Tabs/Tile Palette"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+
+[node name="HBox" type="HBoxContainer" parent="HUDLayer/HUD/Margin/MainView/PaletteToolbox/Tabs/Tile Palette/VBox"]
+margin_right = 174.0
+margin_bottom = 24.0
+
+[node name="Brush" type="Button" parent="HUDLayer/HUD/Margin/MainView/PaletteToolbox/Tabs/Tile Palette/VBox/HBox"]
+margin_right = 28.0
+margin_bottom = 24.0
+toggle_mode = true
+pressed = true
+group = ExtResource( 7 )
+icon = ExtResource( 9 )
+script = ExtResource( 11 )
+_tile_action_mode_path = NodePath("../../../../../../../../ActionModes/TileMode")
+
+[node name="Line" type="Button" parent="HUDLayer/HUD/Margin/MainView/PaletteToolbox/Tabs/Tile Palette/VBox/HBox"]
+margin_left = 32.0
+margin_right = 56.0
+margin_bottom = 24.0
+toggle_mode = true
+group = ExtResource( 7 )
+icon = ExtResource( 10 )
+script = ExtResource( 11 )
+_tile_action_mode_path = NodePath("../../../../../../../../ActionModes/TileMode")
+mode = 1
+
+[node name="Rectangle" type="Button" parent="HUDLayer/HUD/Margin/MainView/PaletteToolbox/Tabs/Tile Palette/VBox/HBox"]
+margin_left = 60.0
+margin_right = 88.0
+margin_bottom = 24.0
+toggle_mode = true
+group = ExtResource( 7 )
+icon = ExtResource( 8 )
+script = ExtResource( 11 )
+_tile_action_mode_path = NodePath("../../../../../../../../ActionModes/TileMode")
+mode = 2
+
+[node name="Space" type="Control" parent="HUDLayer/HUD/Margin/MainView/PaletteToolbox/Tabs/Tile Palette/VBox/HBox"]
+margin_left = 92.0
+margin_right = 96.0
+margin_bottom = 24.0
+size_flags_horizontal = 3
+
+[node name="Thickness" type="SpinBox" parent="HUDLayer/HUD/Margin/MainView/PaletteToolbox/Tabs/Tile Palette/VBox/HBox"]
+margin_left = 100.0
+margin_right = 174.0
+margin_bottom = 24.0
+min_value = 1.0
+max_value = 20.0
+value = 1.0
+script = ExtResource( 12 )
+_tile_action_mode_path = NodePath("../../../../../../../../ActionModes/TileMode")
+
+[node name="TilePalette" type="ItemList" parent="HUDLayer/HUD/Margin/MainView/PaletteToolbox/Tabs/Tile Palette/VBox"]
+margin_top = 28.0
+margin_right = 174.0
+margin_bottom = 250.0
 focus_mode = 0
 size_flags_vertical = 3
 items = [ "Item 0", null, false ]
 script = ExtResource( 4 )
-_level_editor_path = NodePath("../../../../../..")
-_tile_mode_action_path = NodePath("../../../../ActionModes/TileMode")
+_level_editor_path = NodePath("../../../../../../../../..")
+_tile_mode_action_path = NodePath("../../../../../../../ActionModes/TileMode")
