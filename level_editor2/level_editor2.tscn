@@ -1,0 +1,105 @@
+[gd_scene load_steps=7 format=2]
+
+[ext_resource path="res://lut/level_editor2/level_editor_control.gd" type="Script" id=1]
+[ext_resource path="res://lut/level_editor2/level_editor2.gd" type="Script" id=2]
+[ext_resource path="res://lut/level_editor2/level_options_menu.gd" type="Script" id=3]
+[ext_resource path="res://lut/level_editor2/tile_palette.gd" type="Script" id=4]
+[ext_resource path="res://lut/level_editor2/tilemap_cursor.gd" type="Script" id=5]
+[ext_resource path="res://lut/level_editor2/tile_mode.gd" type="Script" id=6]
+
+[node name="LevelEditor" type="CanvasLayer"]
+layer = 10
+follow_viewport_enable = true
+script = ExtResource( 2 )
+
+[node name="Levels" type="Node" parent="."]
+
+[node name="PreviewTileMap" type="TileMap" parent="."]
+self_modulate = Color( 1, 1, 1, 0.47451 )
+format = 1
+
+[node name="TileMapCursor" type="Node2D" parent="PreviewTileMap"]
+script = ExtResource( 5 )
+color = Color( 0.847059, 0.847059, 0.847059, 1 )
+density = 20
+width = 1.0
+
+[node name="Camera2D" type="Camera2D" parent="."]
+
+[node name="HUDLayer" type="CanvasLayer" parent="."]
+layer = 11
+
+[node name="HUD" type="Control" parent="HUDLayer"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+focus_mode = 2
+script = ExtResource( 1 )
+_camera_path = NodePath("../../Camera2D")
+up_action = "editor_up"
+down_action = "editor_down"
+left_action = "editor_left"
+right_action = "editor_right"
+
+[node name="ActionModes" type="Control" parent="HUDLayer/HUD"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+mouse_filter = 1
+
+[node name="TileMode" type="Control" parent="HUDLayer/HUD/ActionModes"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+script = ExtResource( 6 )
+_preview_map_path = NodePath("../../../../PreviewTileMap")
+_map_cursor_path = NodePath("../../../../PreviewTileMap/TileMapCursor")
+draw_mode = 2
+
+[node name="Margin" type="MarginContainer" parent="HUDLayer/HUD"]
+anchor_right = 1.0
+anchor_bottom = 1.0
+mouse_filter = 2
+custom_constants/margin_right = 10
+custom_constants/margin_top = 10
+custom_constants/margin_left = 10
+custom_constants/margin_bottom = 10
+
+[node name="MainView" type="Control" parent="HUDLayer/HUD/Margin"]
+margin_left = 10.0
+margin_top = 10.0
+margin_right = 630.0
+margin_bottom = 350.0
+mouse_filter = 2
+
+[node name="PaletteToolbox" type="VBoxContainer" parent="HUDLayer/HUD/Margin/MainView"]
+margin_right = 166.0
+margin_bottom = 340.0
+mouse_filter = 2
+custom_constants/separation = 10
+
+[node name="EditModeLabel" type="Label" parent="HUDLayer/HUD/Margin/MainView/PaletteToolbox"]
+margin_right = 166.0
+margin_bottom = 14.0
+size_flags_vertical = 0
+text = "Edit Mode"
+
+[node name="Level" type="OptionButton" parent="HUDLayer/HUD/Margin/MainView/PaletteToolbox"]
+margin_top = 24.0
+margin_right = 166.0
+margin_bottom = 44.0
+focus_mode = 0
+mouse_filter = 1
+text = "one"
+items = [ "one", null, false, 0, null ]
+selected = 0
+script = ExtResource( 3 )
+_level_editor_path = NodePath("../../../../../..")
+
+[node name="TilePalette" type="ItemList" parent="HUDLayer/HUD/Margin/MainView/PaletteToolbox"]
+margin_top = 54.0
+margin_right = 166.0
+margin_bottom = 340.0
+focus_mode = 0
+size_flags_vertical = 3
+items = [ "Item 0", null, false ]
+script = ExtResource( 4 )
+_level_editor_path = NodePath("../../../../../..")
+_tile_mode_action_path = NodePath("../../../../ActionModes/TileMode")

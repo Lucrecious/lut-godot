@@ -105,6 +105,16 @@ static func get_children(node: Node, type) -> Array:
 		children.push_back(child)
 	
 	return children
+
+static func get_children_recursive(node: Node, type) -> Array:
+	if not node:
+		return []
+	
+	var children := get_children(node, type)
+	for child in node.get_children():
+		children += get_children_recursive(child, type)
+	
+	return children
 	
 static func get_child_with_error(node: Node, type) -> Node:
 	var child := get_child(node, type)
