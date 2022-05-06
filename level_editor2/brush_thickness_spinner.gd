@@ -9,6 +9,7 @@ func _ready() -> void:
 	_on_draw_mode_changed()
 	
 	connect('value_changed', self, '_on_value_changed')
+	get_line_edit().focus_mode = Control.FOCUS_NONE
 
 func _on_draw_mode_changed() -> void:
 	if tile_action_mode.draw_mode == TileActionMode.Mode.FreeHand or tile_action_mode.draw_mode == TileActionMode.Mode.Line:

@@ -2,6 +2,7 @@ class_name TileActionMode
 extends Control
 
 signal draw_mode_changed()
+signal brush_thickness_changed()
 
 enum Mode {
 	FreeHand,
@@ -10,7 +11,9 @@ enum Mode {
 }
 
 export(NodePath) var _preview_map_path := NodePath()
-export(NodePath ) var _map_cursor_path := NodePath()
+export(NodePath) var _map_cursor_path := NodePath()
+export(NodePath) var _commands_path := NodePath()
+export(NodePath) var _editor_path := NodePath()
 
 export(Mode) var draw_mode := Mode.FreeHand setget _draw_mode_set
 func _draw_mode_set(value: int) -> void:
@@ -20,8 +23,16 @@ func _draw_mode_set(value: int) -> void:
 	draw_mode = value
 	emit_signal('draw_mode_changed')
 
-export(int) var brush_thickness := 1
+export(int) var brush_thickness := 1 setget _brush_thickness_set
+func _brush_thickness_set(value: int) -> void:
+	if brush_thickness == value:
+		return
+	
+	brush_thickness = value
+	emit_signal('brush_thickness_changed')
 
+onready var _editor := NodE.get_node_with_error(self, _editor_path, LevelEditor2) as LevelEditor2
+onready var _commands := NodE.get_node_with_error(self, _commands_path, LevelEditor2Commands) as LevelEditor2Commands
 onready var _map_cursor := NodE.get_node_with_error(self, _map_cursor_path, TileMapCursor) as TileMapCursor
 onready var _preview_map := NodE.get_node_with_error(self, _preview_map_path, TileMap) as TileMap
 
@@ -30,16 +41,28 @@ var _is_dragging := false
 var _last_coords_clicked := Vector2.ZERO
 var _previous_mouse_coords := Vector2.ZERO
 
+func _ready() -> void:
+	connect('brush_thickness_changed', self, '_on_brush_thickness_changed')
+
+func _on_brush_thickness_changed() -> void:
+	if _current_tile.empty():
+		return
+	
+	_adjust_map_cursor_size(_current_tile.parent as TileMap)
+
 func set_current_tile(tile: Dictionary) -> void:
 	_current_tile = tile
 	
 	var tilemap := tile.parent as TileMap
-	_map_cursor.cell_size = tilemap.cell_size
-	_map_cursor.regenerate()
+	_adjust_map_cursor_size(tilemap)
 	
 	_preview_map.cell_size = tilemap.cell_size
 	_preview_map.tile_set = tilemap.tile_set
 	_preview_map.global_position = tilemap.global_position
+
+func _adjust_map_cursor_size(tilemap: TileMap) -> void:
+	_map_cursor.cell_size = tilemap.cell_size * brush_thickness
+	_map_cursor.regenerate()
 
 func _gui_input(event: InputEvent) -> void:
 	if event.is_echo():
@@ -58,25 +81,31 @@ func _gui_input(event: InputEvent) -> void:
 	
 	_map_cursor.position = world_position
 	
+	var mouse_button := mouse_event as InputEventMouseButton
+	
 	if event.is_pressed()\
-		and mouse_event is InputEventMouseButton and event.button_index == BUTTON_LEFT:
+		and mouse_button and\
+		(mouse_button.button_index == BUTTON_LEFT or mouse_button.button_index == BUTTON_RIGHT):
 		_is_dragging = true
 		_last_coords_clicked = map_position
 		_set_cellsv(_preview_map, [map_position], _current_tile.id, brush_thickness)
-		grab_focus()
 		
 	elif not event.is_pressed()\
-		and mouse_event is InputEventMouseButton and event.button_index == BUTTON_LEFT:
+		and mouse_button and\
+		(mouse_button.button_index == BUTTON_LEFT or mouse_button.button_index == BUTTON_RIGHT):
 		_is_dragging = false
 		
-		for p in _preview_map.get_used_cells():
-			tilemap.set_cellv(p, _current_tile.id)
-		var used_rect := _preview_map.get_used_rect()
-		tilemap.update_bitmask_region(used_rect.position, used_rect.position + used_rect.size)
-			
-		_preview_map.clear()
+		var level_owner := _editor.get_level_owner(tilemap)
 		
-		release_focus()
+		if level_owner:
+			if mouse_button.button_index == BUTTON_LEFT:
+				_commands.copy_used_tiles(_preview_map, tilemap, level_owner)
+			else:
+				_commands.remove_tiles(_preview_map, tilemap, level_owner)
+		else:
+			assert(false, 'all tilemaps should be part of a level')
+		
+		_preview_map.clear()
 		
 	elif mouse_event is InputEventMouseMotion:
 		if _is_dragging:

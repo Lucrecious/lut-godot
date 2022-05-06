@@ -144,3 +144,12 @@ static func set_owner_recursive(root: Node, owner: Node) -> void:
 	
 	for c in root.get_children():
 		set_owner_recursive(c, owner)
+
+static func is_ancestor(node: Node, parent: Node) -> bool:
+	if not node.get_parent():
+		return false
+	
+	if node.get_parent() == parent:
+		return true
+	
+	return is_ancestor(node.get_parent(), parent)

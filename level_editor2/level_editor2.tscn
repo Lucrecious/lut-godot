@@ -1,4 +1,4 @@
-[gd_scene load_steps=13 format=2]
+[gd_scene load_steps=17 format=2]
 
 [ext_resource path="res://lut/level_editor2/level_editor_control.gd" type="Script" id=1]
 [ext_resource path="res://lut/level_editor2/level_editor2.gd" type="Script" id=2]
@@ -12,16 +12,60 @@
 [ext_resource path="res://lut/level_editor2/assets/line.svg" type="Texture" id=10]
 [ext_resource path="res://lut/level_editor2/tile_draw_mode_button.gd" type="Script" id=11]
 [ext_resource path="res://lut/level_editor2/brush_thickness_spinner.gd" type="Script" id=12]
+[ext_resource path="res://lut/level_editor2/assets/on_off_tileset.png" type="Texture" id=13]
+[ext_resource path="res://lut/level_editor2/commands.gd" type="Script" id=14]
+
+[sub_resource type="TileSet" id=1]
+0/name = "off"
+0/texture = ExtResource( 13 )
+0/tex_offset = Vector2( 0, 0 )
+0/modulate = Color( 1, 1, 1, 1 )
+0/region = Rect2( 0, 0, 4, 4 )
+0/tile_mode = 0
+0/occluder_offset = Vector2( 0, 0 )
+0/navigation_offset = Vector2( 0, 0 )
+0/shape_offset = Vector2( 0, 0 )
+0/shape_transform = Transform2D( 1, 0, 0, 1, 0, 0 )
+0/shape_one_way = false
+0/shape_one_way_margin = 0.0
+0/shapes = [  ]
+0/z_index = 0
+1/name = "on"
+1/texture = ExtResource( 13 )
+1/tex_offset = Vector2( 0, 0 )
+1/modulate = Color( 1, 1, 1, 1 )
+1/region = Rect2( 0, 4, 4, 4 )
+1/tile_mode = 0
+1/occluder_offset = Vector2( 0, 0 )
+1/navigation_offset = Vector2( 0, 0 )
+1/shape_offset = Vector2( 0, 0 )
+1/shape_transform = Transform2D( 1, 0, 0, 1, 0, 0 )
+1/shape_one_way = false
+1/shape_one_way_margin = 0.0
+1/shapes = [  ]
+1/z_index = 0
+
+[sub_resource type="Theme" id=2]
+LineEdit/constants/minimum_spaces = 5
+VBoxContainer/constants/separation = 10
 
 [node name="LevelEditor" type="CanvasLayer"]
 layer = 10
 follow_viewport_enable = true
 script = ExtResource( 2 )
+left_click_action = "editor2_left_click"
+right_click_action = "editor2_right_click"
+
+[node name="Commands" type="Node" parent="."]
+script = ExtResource( 14 )
 
 [node name="Levels" type="Node" parent="."]
 
 [node name="PreviewTileMap" type="TileMap" parent="."]
 self_modulate = Color( 1, 1, 1, 0.47451 )
+tile_set = SubResource( 1 )
+cell_size = Vector2( 16, 16 )
+centered_textures = true
 collision_layer = 0
 collision_mask = 0
 format = 1
@@ -38,9 +82,13 @@ width = 1.0
 layer = 11
 
 [node name="HUD" type="Control" parent="HUDLayer"]
+process_priority = 1
 anchor_right = 1.0
 anchor_bottom = 1.0
+margin_top = 1.0
+margin_bottom = 1.0
 focus_mode = 2
+theme = SubResource( 2 )
 script = ExtResource( 1 )
 _camera_path = NodePath("../../Camera2D")
 up_action = "editor_up"
@@ -56,10 +104,11 @@ mouse_filter = 1
 [node name="TileMode" type="Control" parent="HUDLayer/HUD/ActionModes"]
 anchor_right = 1.0
 anchor_bottom = 1.0
-focus_mode = 2
 script = ExtResource( 6 )
 _preview_map_path = NodePath("../../../../PreviewTileMap")
 _map_cursor_path = NodePath("../../../../PreviewTileMap/TileMapCursor")
+_commands_path = NodePath("../../../../Commands")
+_editor_path = NodePath("../../../..")
 
 [node name="Margin" type="MarginContainer" parent="HUDLayer/HUD"]
 anchor_right = 1.0
@@ -81,7 +130,6 @@ mouse_filter = 2
 margin_right = 182.0
 margin_bottom = 340.0
 mouse_filter = 2
-custom_constants/separation = 10
 
 [node name="EditModeLabel" type="Label" parent="HUDLayer/HUD/Margin/MainView/PaletteToolbox"]
 margin_right = 182.0
@@ -127,6 +175,7 @@ margin_bottom = 24.0
 [node name="Brush" type="Button" parent="HUDLayer/HUD/Margin/MainView/PaletteToolbox/Tabs/Tile Palette/VBox/HBox"]
 margin_right = 28.0
 margin_bottom = 24.0
+focus_mode = 0
 toggle_mode = true
 pressed = true
 group = ExtResource( 7 )
@@ -138,6 +187,7 @@ _tile_action_mode_path = NodePath("../../../../../../../../ActionModes/TileMode"
 margin_left = 32.0
 margin_right = 56.0
 margin_bottom = 24.0
+focus_mode = 0
 toggle_mode = true
 group = ExtResource( 7 )
 icon = ExtResource( 10 )
@@ -149,6 +199,7 @@ mode = 1
 margin_left = 60.0
 margin_right = 88.0
 margin_bottom = 24.0
+focus_mode = 0
 toggle_mode = true
 group = ExtResource( 7 )
 icon = ExtResource( 8 )
@@ -158,12 +209,12 @@ mode = 2
 
 [node name="Space" type="Control" parent="HUDLayer/HUD/Margin/MainView/PaletteToolbox/Tabs/Tile Palette/VBox/HBox"]
 margin_left = 92.0
-margin_right = 96.0
+margin_right = 124.0
 margin_bottom = 24.0
 size_flags_horizontal = 3
 
 [node name="Thickness" type="SpinBox" parent="HUDLayer/HUD/Margin/MainView/PaletteToolbox/Tabs/Tile Palette/VBox/HBox"]
-margin_left = 100.0
+margin_left = 128.0
 margin_right = 174.0
 margin_bottom = 24.0
 min_value = 1.0
@@ -173,7 +224,7 @@ script = ExtResource( 12 )
 _tile_action_mode_path = NodePath("../../../../../../../../ActionModes/TileMode")
 
 [node name="TilePalette" type="ItemList" parent="HUDLayer/HUD/Margin/MainView/PaletteToolbox/Tabs/Tile Palette/VBox"]
-margin_top = 28.0
+margin_top = 34.0
 margin_right = 174.0
 margin_bottom = 250.0
 focus_mode = 0
@@ -182,3 +233,25 @@ items = [ "Item 0", null, false ]
 script = ExtResource( 4 )
 _level_editor_path = NodePath("../../../../../../../../..")
 _tile_mode_action_path = NodePath("../../../../../../../ActionModes/TileMode")
+
+[node name="IOStack" type="VBoxContainer" parent="HUDLayer/HUD/Margin/MainView"]
+anchor_left = 1.0
+anchor_right = 1.0
+margin_left = -63.0
+margin_bottom = 40.0
+
+[node name="Commit" type="Button" parent="HUDLayer/HUD/Margin/MainView/IOStack"]
+margin_right = 63.0
+margin_bottom = 20.0
+focus_mode = 0
+text = "Commit"
+
+[node name="Reload" type="Button" parent="HUDLayer/HUD/Margin/MainView/IOStack"]
+margin_top = 30.0
+margin_right = 63.0
+margin_bottom = 50.0
+focus_mode = 0
+text = "Reload"
+
+[connection signal="pressed" from="HUDLayer/HUD/Margin/MainView/IOStack/Commit" to="." method="commit_editing_level"]
+[connection signal="pressed" from="HUDLayer/HUD/Margin/MainView/IOStack/Reload" to="." method="reload_editing_level"]

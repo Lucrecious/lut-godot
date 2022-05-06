@@ -6,7 +6,10 @@ signal editable_scenes_changed()
 
 export(String) var custom_toggle_action := ''
 export(String) var level_group := '__edit_level'
+export(String) var left_click_action := ''
+export(String) var right_click_action := ''
 
+onready var commands := $Commands as LevelEditor2Commands
 onready var _levels := $Levels
 onready var _root_hud_control := $HUDLayer/HUD as Control
 
@@ -20,6 +23,27 @@ func _editing_level_set(value: Level2) -> void:
 
 var _editing := false
 var _path_to_level2 := {}
+
+func commit_editing_level() -> void:
+	if not editing_level:
+		return
+	
+	var packed_scene := PackedScene.new()
+	packed_scene.pack(editing_level.get_orphan_scene())
+	commands.commit_level(editing_level.tree_scene.filename, packed_scene)
+
+func reload_editing_level() -> void:
+	if not editing_level:
+		return
+	
+	var parent := editing_level.tree_scene.get_parent()
+	editing_level.connect('tree_exited', self,
+		'_on_editing_tree_scene_exited_for_reload', [parent, editing_level.get_orphan_scene()],
+		CONNECT_ONESHOT)
+	editing_level.tree_scene.queue_free()
+
+func _on_editing_tree_scene_exited_for_reload(parent: Node, new_level: Node) -> void:
+	parent.call_deferred('add_child', new_level)
 
 func get_editable_scenes() -> Array:
 	var scenes := []
@@ -56,6 +80,15 @@ func _on_node_added(node: Node) -> void:
 	_levels.add_child(level2)
 	emit_signal('editable_scenes_changed')
 
+func get_level_owner(node: Node) -> Level2:
+	for l in _path_to_level2.values():
+		if not NodE.is_ancestor(node, l.tree_scene):
+			continue
+		
+		return l
+	return null
+	
+
 func _on_node_removed(node: Node) -> void:
 	if not node.is_in_group(level_group):
 		return
@@ -71,6 +104,9 @@ func _on_node_removed(node: Node) -> void:
 		level2.queue_free()
 	
 	_path_to_level2.erase(node.filename)
+	
+	if level2 == editing_level:
+		self.editing_level = null
 	
 	emit_signal('editable_scenes_changed')
 
