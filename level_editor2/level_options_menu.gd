@@ -13,15 +13,19 @@ func _ready() -> void:
 
 func _on_editable_scenes_changed() -> void:
 	clear()
-	for scene in _level_editor.get_editable_scenes():
+	
+	for scene in _level_editor.get_tree_scenes():
 		add_item(scene.name, scene.get_instance_id())
 	
 	_on_editing_level_changed()
 
 func _on_editing_level_changed() -> void:
 	if not _level_editor.editing_level:
-		if get_item_count() > 0:
-			select(0)
+		var levels := _level_editor.get_levels()
+		if levels.empty():
+			return
+		
+		_level_editor.editing_level = levels[0]
 		return
 	
 	var found_index := get_item_index(_level_editor.editing_level.get_instance_id())

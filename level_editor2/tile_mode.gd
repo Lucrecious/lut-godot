@@ -51,6 +51,12 @@ func _on_brush_thickness_changed() -> void:
 	_adjust_map_cursor_size(_current_tile.parent as TileMap)
 
 func set_current_tile(tile: Dictionary) -> void:
+	if tile.empty():
+		_current_tile = {}
+		_map_cursor.visible = false
+		return
+	
+	_map_cursor.visible = true
 	_current_tile = tile
 	
 	var tilemap := tile.parent as TileMap

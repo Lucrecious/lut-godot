@@ -10,22 +10,31 @@ export(String) var right_action := 'ui_right'
 
 onready var _action_modes := $ActionModes
 
+var _previous_camera: Camera2D = null
 onready var camera := NodE.get_node_with_error(
 	self, _camera_path, Camera2D
 ) as Camera2D
 
 var _enable := false
-var _previous_camera: Camera2D
 
 func _ready() -> void:
-	_enable = true
-	disable()
+	set_physics_process(false)
+	visible = false
+	_enable = false
 
 func enable() -> void:
 	if _enable:
 		return
 	
 	_enable = true
+	
+	get_tree().connect('node_added', self, '_on_node_added')
+	get_tree().connect('node_removed', self, '_on_node_removed')
+	
+	var current_camera := _current_set_camera(get_tree().root)
+	if current_camera:
+		_on_node_added(current_camera)
+	
 	set_physics_process(true)
 	visible = true
 	grab_focus()
@@ -35,17 +44,36 @@ func disable() -> void:
 	if not _enable:
 		return
 	
+	get_tree().disconnect('node_added', self, '_on_node_added')
+	get_tree().disconnect('node_removed', self, '_on_node_removed')
 	set_physics_process(false)
 	visible = false
 	_revert_to_game_camera()
 	_enable = false
 
+func _on_node_added(node: Node) -> void:
+	var camera := node as Camera2D
+	if not camera:
+		return
+	
+	if not camera.current:
+		return
+	
+	_previous_camera = camera
+	_switch_to_free_camera()
+
+func _on_node_removed(node: Node) -> void:
+	if node != _previous_camera:
+		return
+	
+	_previous_camera = null
+
 func _switch_to_free_camera() -> void:
-	_previous_camera = _current_set_camera(get_tree().root)
+	camera.current = true
+	
 	if not _previous_camera:
 		return
 	
-	camera.current = true
 	camera.global_position = _previous_camera.global_position
 
 func _revert_to_game_camera() -> void:
@@ -53,6 +81,7 @@ func _revert_to_game_camera() -> void:
 		return
 	
 	_previous_camera.current = true
+	_previous_camera = null
 
 func _current_set_camera(viewport: Viewport) -> Camera2D:
 	var cameras := _camera_group(viewport)

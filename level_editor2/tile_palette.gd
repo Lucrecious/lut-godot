@@ -15,9 +15,12 @@ func _ready() -> void:
 	connect('item_selected', self, '_on_item_selected')
 
 func _on_item_selected(index: int) -> void:
-	var tile_metadata := get_item_metadata(index) as Dictionary
-	print_debug(tile_metadata)
-	tile_mode_action.set_current_tile(tile_metadata)
+	if index < 0:
+		tile_mode_action.set_current_tile({})
+	else:
+		var tile_metadata := get_item_metadata(index) as Dictionary
+		print_debug(tile_metadata)
+		tile_mode_action.set_current_tile(tile_metadata)
 
 func _on_editing_level_changed() -> void:
 	var level := level_editor.editing_level
@@ -25,6 +28,7 @@ func _on_editing_level_changed() -> void:
 		return
 	
 	clear()
+	_on_item_selected(-1)
 	
 	if _editing_level:
 		pass

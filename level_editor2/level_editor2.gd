@@ -45,11 +45,14 @@ func reload_editing_level() -> void:
 func _on_editing_tree_scene_exited_for_reload(parent: Node, new_level: Node) -> void:
 	parent.call_deferred('add_child', new_level)
 
-func get_editable_scenes() -> Array:
+func get_tree_scenes() -> Array:
 	var scenes := []
 	for level in _path_to_level2.values():
 		scenes.push_back(get_node(level.absolute_path))
 	return scenes
+
+func get_levels() -> Array:
+	return _path_to_level2.values()
 
 func _ready() -> void:
 	get_tree().connect('node_added', self, '_on_node_added')
