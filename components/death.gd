@@ -57,6 +57,6 @@ func _on_revived(_amount: int) -> void:
 
 func _wait_then_enable_collision(collision: CollisionShape2D) -> void:
 	yield(get_tree(), 'idle_frame')
-	collision.disabled = false
+	collision.set_deferred('disabled', false)
 
 func __null(): return

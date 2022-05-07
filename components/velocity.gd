@@ -1,6 +1,7 @@
 class_name Velocity
 extends Node2D
 
+signal about_to_floor_hit()
 signal floor_hit()
 signal about_to_floor_left()
 signal floor_left()
@@ -92,6 +93,9 @@ func _physics_process_kinematicbody2d() -> void:
 	
 	if previous_is_on_floor and not body.is_on_floor():
 		emit_signal('about_to_floor_left')
+	
+	if not previous_is_on_floor and body.is_on_floor():
+		emit_signal('about_to_floor_hit')
 	
 	var current_is_on_wall := body.is_on_wall()
 	var current_is_on_floor := body.is_on_floor()
