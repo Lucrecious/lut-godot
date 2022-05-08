@@ -76,5 +76,5 @@ func _finish_dodge() -> void:
 	
 	set_physics_process(false)
 	_dodge_side = 0
-	_disabler.enable_below(self)
 	_is_dodging = false
+	_disabler.enable_below(self)
