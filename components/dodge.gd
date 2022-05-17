@@ -1,4 +1,8 @@
+class_name Dodge
 extends Node2D
+
+signal started()
+signal ended()
 
 export(String) var action_name := ''
 export(NodePath) var _priority_node_path := NodePath()
@@ -33,10 +37,19 @@ func disable() -> void:
 		return
 	
 	set_physics_process(false)
+	var was_dodging := _is_dodging
 	_is_dodging = false
 	_controller.disconnect('%s_just_pressed' % action_name, self, '_on_dodge_just_pressed')
 	_controller.disconnect('direction1_changed', self, '_on_direction1_changed')
 	_enabled = false
+	
+	if not was_dodging:
+		return
+	
+	emit_signal('ended')
+
+func is_dodging() -> bool:
+	return _is_dodging
 
 func _on_direction1_changed(value: Vector2) -> void:
 	if not _controller.is_pressed(action_name):
@@ -64,6 +77,7 @@ func _dodge(side: int) -> void:
 		_gravity.enable()
 	
 	_animation.callback_on_finished_by_node(_priority_node, self, '_finish_dodge')
+	emit_signal('started')
 
 func _physics_process(delta: float) -> void:
 	_velocity.value.x = dodge_velocity * _dodge_side
@@ -78,3 +92,4 @@ func _finish_dodge() -> void:
 	_dodge_side = 0
 	_is_dodging = false
 	_disabler.enable_below(self)
+	emit_signal('ended')
