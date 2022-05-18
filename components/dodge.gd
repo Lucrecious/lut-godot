@@ -51,6 +51,9 @@ func disable() -> void:
 func is_dodging() -> bool:
 	return _is_dodging
 
+func enabled() -> bool:
+	return _enabled
+
 func _on_direction1_changed(value: Vector2) -> void:
 	if not _controller.is_pressed(action_name):
 		return

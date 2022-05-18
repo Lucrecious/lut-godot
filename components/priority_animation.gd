@@ -30,6 +30,9 @@ func _ready() -> void:
 
 # override to include extra signal
 func play(name: String = "", custom_blend: float = -1, custom_speed: float = 1.0, from_end: bool = false):
+	assert(get_signal_connection_list('animation_finished').size() == 1)
+	assert(get_signal_connection_list('animation_changed').size() == 1)
+	
 	if current_animation == name: return
 	assert(has_animation(name))
 	var blend_time := custom_blend if custom_blend >= 0 else get_blend_time(last_unstopped_animation_name, name)
@@ -48,6 +51,11 @@ func play(name: String = "", custom_blend: float = -1, custom_speed: float = 1.0
 	last_unstopped_animation_name = name
 	.play(name, blend_time, custom_speed, from_end)
 	emit_signal('animation_changEd', old, name)
+
+func replay_same_position_no_blend_no_changEd() -> void:
+	.stop()
+	.play(current_animation, 0, playback_speed, playback_speed < 0)
+	seek(0, true)
 
 func stop(reset := true) -> void:
 	last_unstopped_animation_name = ''
