@@ -62,6 +62,9 @@ func disable() -> void:
 func enable() -> void:
 	_enabled = true
 
+func enabled() -> bool:
+	return _enabled
+
 func _jump_pressed(action: String) -> void:
 	if not _enabled:
 		return
