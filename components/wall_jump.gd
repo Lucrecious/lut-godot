@@ -4,12 +4,12 @@ export(float) var height := 1.0
 export(float) var jump_lock_distance_x := 1.0
 export(float) var speed_x := 1.0
 
-onready var _wall_grip := NodE.get_sibling_with_error(self, PlatformerWallGrip) as PlatformerWallGrip
+onready var _wall_grip := NodE.get_sibling(self, PlatformerWallGrip) as PlatformerWallGrip
 onready var _controller := Components.controller(get_parent())
 onready var _velocity := Components.velocity(get_parent())
 onready var _disabler := Components.disabler(get_parent())
-onready var _jump := NodE.get_sibling_with_error(self, PlatformerJump) as PlatformerJump
-onready var _gravity := NodE.get_sibling_with_error(self, Gravity) as Gravity
+onready var _jump := NodE.get_sibling(self, PlatformerJump) as PlatformerJump
+onready var _gravity := NodE.get_sibling(self, Gravity) as Gravity
 onready var _turner := NodE.get_sibling(self, PlatformerTurner) as PlatformerTurner
 
 var _enabled := false

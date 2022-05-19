@@ -2,7 +2,7 @@ extends OptionButton
 
 export(NodePath) var _level_editor_path := NodePath()
 
-onready var _level_editor := NodE.get_node_with_error(self, _level_editor_path, LevelEditor2) as LevelEditor2
+onready var _level_editor := NodE.get_node(self, _level_editor_path, LevelEditor2) as LevelEditor2
 
 func _ready() -> void:
 	_level_editor.connect('editable_scenes_changed', self, '_on_editable_scenes_changed')

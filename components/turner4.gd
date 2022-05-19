@@ -8,7 +8,7 @@ export(PoolStringArray) var _animations4 := PoolStringArray()
 export(Array, NodePath) var _sprite_paths := []
 
 onready var _controller := Components.controller(get_parent())
-onready var _animation := NodE.get_node_with_error(
+onready var _animation := NodE.get_node(
 	self, _animation_path, PriorityAnimationPlayer)\
 	as PriorityAnimationPlayer
 
@@ -70,7 +70,7 @@ func _sprites_set_animation(animation: String) -> void:
 func _sprites_from_paths(paths: Array) -> Array:
 	var sprites := []
 	for p in paths:
-		var sprite := NodE.get_node_with_error(
+		var sprite := NodE.get_node(
 			self, p, AnimatedSprite) as AnimatedSprite
 		if not sprite:
 			continue

@@ -3,8 +3,8 @@ extends ItemList
 export(NodePath) var _level_editor_path := NodePath()
 export(NodePath) var _tile_mode_action_path := NodePath()
 
-onready var level_editor := NodE.get_node_with_error(self, _level_editor_path, LevelEditor2) as LevelEditor2
-onready var tile_mode_action := NodE.get_node_with_error(self, _tile_mode_action_path, TileActionMode) as TileActionMode
+onready var level_editor := NodE.get_node(self, _level_editor_path, LevelEditor2) as LevelEditor2
+onready var tile_mode_action := NodE.get_node(self, _tile_mode_action_path, TileActionMode) as TileActionMode
 
 var _editing_level: Level2 = null
 

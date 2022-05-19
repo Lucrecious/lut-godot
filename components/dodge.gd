@@ -14,7 +14,7 @@ onready var _animation := Components.priority_animation_player(get_parent())
 onready var _controller := Components.controller(get_parent())
 onready var _disabler := Components.disabler(get_parent())
 onready var _velocity := Components.velocity(get_parent())
-onready var _gravity := NodE.get_sibling_with_error(self, Gravity) as Gravity
+onready var _gravity := NodE.get_sibling(self, Gravity) as Gravity
 
 var _enabled := false
 var _is_dodging := false

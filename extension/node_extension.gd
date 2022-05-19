@@ -41,25 +41,24 @@ static func add_child(node: Node, child: Node) -> Node:
 	node.add_child(child)
 	return child
 
-static func get_node_with_error(node: Node, path: NodePath, type) -> Node:
+static func get_node(node: Node, path: NodePath, type, error := true) -> Node:
 	var found := node.get_node_or_null(path)
-	if found and found is type: return found
+	if found and found is type:
+		return found
 	
-	assert(false, 'must be found')
+	assert(not error, 'must be found')
 	return null
 
-static func get_ancestor(node: Node, type) -> Node:
-	if not node: return null
+static func get_ancestor(node: Node, type, with_error := true) -> Node:
+	if not node:
+		assert(not with_error)
+		return null
 	
 	var parent := node.get_parent()
-	if parent is type: return parent
+	if parent is type:
+		return parent
 	
 	return get_ancestor(node.get_parent(), type)
-
-static func get_ancestor_with_error(node: Node, type) -> Node:
-	var ancestor := get_ancestor(node, type)
-	assert(ancestor, 'must be found')
-	return ancestor
 
 static func get_child_by_name(node: Node, name: String) -> Node:
 	if not node: return null
@@ -82,14 +81,16 @@ static func get_sibling_by_name(node: Node, name: String) -> Node:
 	
 	return sibling
 
-static func get_child(node: Node, type) -> Node:
+static func get_child(node: Node, type, with_error := true) -> Node:
 	if not node:
+		assert(not with_error)
 		return null
 	
 	for child in node.get_children():
 		if not child is type: continue
 		return child
 	
+	assert(not with_error)
 	return null
 
 static func get_children(node: Node, type) -> Array:
@@ -116,25 +117,18 @@ static func get_children_recursive(node: Node, type) -> Array:
 	
 	return children
 	
-static func get_child_with_error(node: Node, type) -> Node:
-	var child := get_child(node, type)
-	assert(child, 'must be found')
-	return child
-
-static func get_sibling(node: Node, type) -> Node:
+static func get_sibling(node: Node, type, with_error := true) -> Node:
 	var parent := node.get_parent()
-	if not parent: return null
+	if not parent: 
+		assert(not with_error)
+		return null
 	
 	for child in parent.get_children():
 		if not child is type: continue
 		return child
 	
+	assert(not with_error)
 	return null
-
-static func get_sibling_with_error(node: Node, type) -> Node:
-	var child := get_sibling(node, type)
-	assert(child, 'must be not null')
-	return child
 
 static func set_owner_recursive(root: Node, owner: Node) -> void:
 	if not root: return

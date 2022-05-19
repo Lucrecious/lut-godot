@@ -26,6 +26,4 @@ static func priority_animation_player(entity: Node, error_if_not_found := true) 
 	) as PriorityAnimationPlayer
 
 static func _component(entity: Node, error_if_node_found: bool, type) -> Node:
-	if error_if_node_found:
-		return NodE.get_child_with_error(entity, type)
-	return NodE.get_child(entity, type)
+	return NodE.get_child(entity, type, error_if_node_found)

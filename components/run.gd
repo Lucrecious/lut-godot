@@ -8,15 +8,12 @@ export(Resource) var _floor_velocity_calculation: Resource = null
 export(Resource) var _air_velocity_calculation: Resource = null
 
 onready var _body := get_parent() as KinematicBody2D
-onready var _controller := NodE.get_sibling(self, Controller) as Controller
-onready var _velocity := NodE.get_sibling(self, Velocity) as Velocity
+onready var _controller := Components.controller(get_parent())
+onready var _velocity := Components.velocity(get_parent())
 
 var _direction := 0
 
 func _ready() -> void:
-	assert(_controller, 'controller component must be a sibling')
-	assert(_velocity, 'velocity component must be a sibling')
-	
 	_controller.connect('direction1_changed', self, '_update_direction')
 	
 	enable()

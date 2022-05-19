@@ -8,13 +8,9 @@ export(NodePath) var _root_sprite_path := NodePath()
 
 onready var _controller := NodE.get_sibling(self, Controller) as Controller
 onready var _velocity := NodE.get_sibling(self, Velocity) as Velocity
-onready var _root_sprite := get_node_or_null(_root_sprite_path) as Node2D
+onready var _root_sprite := NodE.get_node(self, _root_sprite_path, Node2D) as Node2D
 
 func _ready() -> void:
-	assert(_controller, 'must have a controller as a sibling')
-	assert(_root_sprite, 'must have an assigned root sprite')
-	assert(_velocity, 'must be a sibling')
-	
 	connect('direction_changed', self, '_update_sprite_flip')
 
 onready var _enabled := true

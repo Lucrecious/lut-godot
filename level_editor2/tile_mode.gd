@@ -31,10 +31,10 @@ func _brush_thickness_set(value: int) -> void:
 	brush_thickness = value
 	emit_signal('brush_thickness_changed')
 
-onready var _editor := NodE.get_node_with_error(self, _editor_path, LevelEditor2) as LevelEditor2
-onready var _commands := NodE.get_node_with_error(self, _commands_path, LevelEditor2Commands) as LevelEditor2Commands
-onready var _map_cursor := NodE.get_node_with_error(self, _map_cursor_path, TileMapCursor) as TileMapCursor
-onready var _preview_map := NodE.get_node_with_error(self, _preview_map_path, TileMap) as TileMap
+onready var _editor := NodE.get_node(self, _editor_path, LevelEditor2) as LevelEditor2
+onready var _commands := NodE.get_node(self, _commands_path, LevelEditor2Commands) as LevelEditor2Commands
+onready var _map_cursor := NodE.get_node(self, _map_cursor_path, TileMapCursor) as TileMapCursor
+onready var _preview_map := NodE.get_node(self, _preview_map_path, TileMap) as TileMap
 
 var _current_tile := {}
 var _is_dragging := false

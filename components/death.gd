@@ -4,19 +4,16 @@ extends Node2D
 signal died()
 signal revived()
 
-onready var _body := NodE.get_ancestor_with_error(self, KinematicBody2D) as KinematicBody2D
+onready var _body := NodE.get_ancestor(self, KinematicBody2D) as KinematicBody2D
 onready var _disabler := NodE.get_sibling(self, ComponentDisabler) as ComponentDisabler
 onready var _health := NodE.get_sibling(self, Health) as Health
-onready var _velocity := NodE.get_sibling(self, Velocity) as Velocity
+onready var _velocity := NodE.get_sibling(self, Velocity, false) as Velocity
 
 var _is_dead := false
 
 func is_dead() -> bool: return _is_dead
 
 func _ready():
-	assert(_disabler, 'must be sibling')
-	assert(_health, 'must be sibling')
-	
 	_health.connect('zeroed', self, '_on_zeroed')
 
 func _on_zeroed() -> void:
@@ -26,11 +23,11 @@ func _on_zeroed() -> void:
 	if _velocity:
 		_velocity.value = Vector2.ZERO
 	
-	var collision := NodE.get_sibling(self, CollisionShape2D) as CollisionShape2D
+	var collision := NodE.get_sibling(self, CollisionShape2D, false) as CollisionShape2D
 	if collision:
 		collision.set_deferred('disabled', true)
 	
-	var gravity := NodE.get_sibling(self, Gravity) as Gravity
+	var gravity := NodE.get_sibling(self, Gravity, false) as Gravity
 	if gravity:
 		gravity.disable()
 	
@@ -45,11 +42,11 @@ func _on_revived(_amount: int) -> void:
 	_disabler.enable_below(self)
 	_is_dead = false
 	
-	var collision := NodE.get_sibling(self, CollisionShape2D) as CollisionShape2D
+	var collision := NodE.get_sibling(self, CollisionShape2D, false) as CollisionShape2D
 	if collision:
 		call_deferred('_wait_then_enable_collision', collision)
 	
-	var gravity := NodE.get_sibling(self, Gravity) as Gravity
+	var gravity := NodE.get_sibling(self, Gravity, false) as Gravity
 	if gravity:
 		gravity.enable()
 	

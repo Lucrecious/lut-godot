@@ -2,7 +2,7 @@ extends SpinBox
 
 export(NodePath) var _tile_action_mode_path := NodePath()
 
-onready var tile_action_mode := NodE.get_node_with_error(self, _tile_action_mode_path, TileActionMode) as TileActionMode
+onready var tile_action_mode := NodE.get_node(self, _tile_action_mode_path, TileActionMode) as TileActionMode
 
 func _ready() -> void:
 	tile_action_mode.connect('draw_mode_changed', self, '_on_draw_mode_changed')

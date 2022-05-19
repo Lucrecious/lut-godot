@@ -11,7 +11,7 @@ export(String) var right_action := 'ui_right'
 onready var _action_modes := $ActionModes
 
 var _previous_camera: Camera2D = null
-onready var camera := NodE.get_node_with_error(
+onready var camera := NodE.get_node(
 	self, _camera_path, Camera2D
 ) as Camera2D
 

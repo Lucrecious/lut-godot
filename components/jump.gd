@@ -11,9 +11,9 @@ export(float) var height := 10.0
 var _enabled := false
 
 onready var _body := get_parent() as KinematicBody2D
-onready var _controller := NodE.get_sibling(self, Controller) as Controller
-onready var _velocity := NodE.get_sibling(self, Velocity) as Velocity
-onready var _gravity := NodE.get_sibling(self, Gravity) as Gravity
+onready var _controller := NodE.get_sibling(self, Controller, false) as Controller
+onready var _velocity := NodE.get_sibling(self, Velocity, false) as Velocity
+onready var _gravity := NodE.get_sibling(self, Gravity, false) as Gravity
 
 var _time_left_floor_msec := -100
 var _jumped := false

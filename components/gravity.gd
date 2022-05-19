@@ -7,12 +7,11 @@ export(float) var terminal_velocity := 30.0
 
 var current := 0.0 setget ,_current_get
 
-onready var _velocity := NodE.get_sibling(self, Velocity) as Velocity
+onready var _velocity := Components.velocity(get_parent())
 
 var _filters := {}
 
 func _ready() -> void:
-	assert(_velocity, 'velocity component must be a sibling')
 	enable()
 
 func add_filter(filter_name: String, object: Object, filter: String) -> void:
