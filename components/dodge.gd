@@ -1,12 +1,15 @@
 class_name Dodge
 extends Node2D
 
+const LONG_JUMP_POST_BUFFER_MSEC := 100
+
 signal started()
 signal ended()
 
 export(String) var action_name := ''
 export(NodePath) var _priority_node_path := NodePath()
 export(float) var dodge_velocity := 0.0
+export(float) var long_jump_velocity := 10.0
 export(bool) var allow_gravity := false
 
 onready var _priority_node := get_node(_priority_node_path)
@@ -15,18 +18,25 @@ onready var _controller := Components.controller(get_parent())
 onready var _disabler := Components.disabler(get_parent())
 onready var _velocity := Components.velocity(get_parent())
 onready var _gravity := NodE.get_sibling(self, Gravity) as Gravity
+onready var _jump := NodE.get_sibling(self, PlatformerJump, false) as PlatformerJump
 
 var _enabled := false
 var _is_dodging := false
 var _dodge_side := 0
+var _assigned_dodge_side := 0
+var _dodge_finished_msec := -LONG_JUMP_POST_BUFFER_MSEC
 
 func _ready():
+	if _jump:
+		_jump.connect('impulsed', self, '_on_jump_impulsed')
+	
 	set_physics_process(false)
 	enable()
 
 func enable() -> void:
 	if _enabled:
 		return
+	
 	_is_dodging = false
 	_enabled = true
 	_controller.connect('%s_just_pressed' % action_name, self, '_on_dodge_just_pressed')
@@ -54,6 +64,19 @@ func is_dodging() -> bool:
 func enabled() -> bool:
 	return _enabled
 
+func _on_jump_impulsed() -> void:
+	if _assigned_dodge_side == 0:
+		return
+	
+	if OS.get_ticks_msec() - _dodge_finished_msec > LONG_JUMP_POST_BUFFER_MSEC:
+		return
+	
+	var input_direction := sign(_controller.get_direction(0).x)
+	if input_direction != _assigned_dodge_side:
+		return
+	
+	_velocity.x = input_direction * long_jump_velocity
+
 func _on_direction1_changed(value: Vector2) -> void:
 	if not _controller.is_pressed(action_name):
 		return
@@ -72,6 +95,7 @@ func _dodge(side: int) -> void:
 		
 	_is_dodging = true
 	_dodge_side = side
+	_assigned_dodge_side = side
 	_velocity.value = Vector2.ZERO
 	set_physics_process(true)
 	_disabler.disable_below(self)
@@ -92,6 +116,7 @@ func _finish_dodge() -> void:
 		return
 	
 	set_physics_process(false)
+	_dodge_finished_msec = OS.get_ticks_msec()
 	_dodge_side = 0
 	_is_dodging = false
 	_disabler.enable_below(self)
