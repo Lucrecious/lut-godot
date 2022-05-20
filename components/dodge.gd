@@ -9,6 +9,7 @@ signal ended()
 export(String) var action_name := ''
 export(NodePath) var _priority_node_path := NodePath()
 export(float) var dodge_velocity := 0.0
+export(bool) var allow_long_jump := false
 export(float) var long_jump_velocity := 10.0
 export(bool) var allow_gravity := false
 
@@ -65,6 +66,9 @@ func enabled() -> bool:
 	return _enabled
 
 func _on_jump_impulsed() -> void:
+	if not allow_long_jump:
+		return
+	
 	if _assigned_dodge_side == 0:
 		return
 	
