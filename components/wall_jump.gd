@@ -1,3 +1,4 @@
+class_name PlatformerWallJump
 extends Node2D
 
 export(float) var height := 1.0
@@ -36,8 +37,14 @@ func disable() -> void:
 	_controller.disconnect('jump_just_pressed', self, '_on_jump_just_pressed')
 	_enabled = false
 
+func enabled() -> bool:
+	return _enabled
+
+func can_wall_jump() -> bool:
+	return _wall_grip.is_gripping()
+
 func _on_jump_just_pressed() -> void:
-	if not _wall_grip.is_gripping():
+	if not can_wall_jump():
 		return
 	
 	_jump_direction = -_wall_grip.get_grip_direction()
