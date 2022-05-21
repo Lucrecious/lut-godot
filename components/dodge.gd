@@ -5,6 +5,7 @@ const LONG_JUMP_POST_BUFFER_MSEC := 100
 
 signal started()
 signal ended()
+signal long_jumped()
 
 export(String) var action_name := ''
 export(NodePath) var _priority_node_path := NodePath()
@@ -80,6 +81,7 @@ func _on_jump_impulsed() -> void:
 		return
 	
 	_velocity.x = input_direction * long_jump_velocity
+	emit_signal('long_jumped')
 
 func _on_direction1_changed(value: Vector2) -> void:
 	if not _controller.is_pressed(action_name):
