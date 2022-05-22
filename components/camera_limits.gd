@@ -11,10 +11,7 @@ onready var _follow := NodE.get_sibling(self, CameraFollow) as CameraFollow
 func _ready() -> void:
 	assert(_camera, 'must be child of camera2d')
 
-func _physics_process(delta: float) -> void:
-	if not _follow.target:
-		return
-	
+func update_limits() -> void:
 	var space := get_world_2d().direct_space_state
 	
 	var viewport_size := get_viewport_rect().size
@@ -92,3 +89,9 @@ func _physics_process(delta: float) -> void:
 		
 		_camera.limit_right = right.position.x
 		break
+
+func _physics_process(delta: float) -> void:
+	if not _follow.target:
+		return
+	
+	update_limits()

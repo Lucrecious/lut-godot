@@ -57,6 +57,11 @@ func replay_same_position_no_blend_no_changEd() -> void:
 	.play(current_animation, 0, playback_speed, playback_speed < 0)
 	seek(0, true)
 
+func pause(is_paused: bool) -> void:
+	var process := not is_paused
+	set_process_internal(process)
+	set_physics_process_internal(process)
+
 func stop(reset := true) -> void:
 	last_unstopped_animation_name = ''
 	if not is_playing(): return
