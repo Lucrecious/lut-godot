@@ -44,6 +44,9 @@ func can_wall_jump() -> bool:
 	return _wall_grip.is_gripping()
 
 func _on_jump_just_pressed() -> void:
+	_wall_jump()
+
+func _wall_jump():
 	if not can_wall_jump():
 		return
 	
