@@ -4,7 +4,6 @@ extends Node2D
 signal died()
 signal revived()
 
-onready var _body := NodE.get_ancestor(self, KinematicBody2D) as KinematicBody2D
 onready var _disabler := NodE.get_sibling(self, ComponentDisabler) as ComponentDisabler
 onready var _health := NodE.get_sibling(self, Health) as Health
 onready var _velocity := NodE.get_sibling(self, Velocity, false) as Velocity
