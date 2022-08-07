@@ -1,6 +1,7 @@
 class_name IDirectionalInput
 extends Node
 
+#warning-ignore:unused_signal
 signal direction_changed()
 
 func get_direction() -> Vector2:

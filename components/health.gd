@@ -24,7 +24,7 @@ func damage(value: int) -> void:
 
 func current_set(value: int) -> void:
 	if not below_zero:
-		value = max(0, value)
+		value = int(max(0, value))
 	
 	if current == value: return
 	var old := current
@@ -48,7 +48,7 @@ func _max_points_set(value: int) -> void:
 	max_points = value
 	emit_signal('max_points_changed')
 
-func __null_set(value: int): return
+func __null_set(_value: int): return
 
 
 

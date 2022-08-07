@@ -24,14 +24,14 @@ var x := 0.0 setget _value_x_set, _value_x_get
 var y := 0.0 setget _value_y_set, _value_y_get
 
 func _value_x_get() -> float: return value.x
-func _value_x_set(x: float) -> void:
-	if value.x == x: return
-	value.x = x
+func _value_x_set(value_x: float) -> void:
+	if value.x == value_x: return
+	value.x = value_x
 
 func _value_y_get() -> float: return value.y
-func _value_y_set(y: float) -> void:
-	if value.y == y: return
-	value.y = y
+func _value_y_set(value_y: float) -> void:
+	if value.y == value_y: return
+	value.y = value_y
 
 var _previous_value := Vector2.ZERO
 
@@ -60,7 +60,7 @@ func _move_pixels_no_update_signals(vec: Vector2) -> Vector2:
 	
 	return Vector2.ZERO
 
-func _physics_process(delta: float) -> void:
+func _physics_process(_delta: float) -> void:
 	assert(_physics_process_func, 'must be set at this point or this should not be running')
 	_physics_process_func.call_func()
 
@@ -83,7 +83,6 @@ func _physics_process_kinematicbody2d() -> void:
 	var previous_is_on_wall := body.is_on_wall()
 	var previous_is_on_floor := body.is_on_floor()
 	
-	var before_impact_value := value
 	var snap := Vector2(0, 1) if value.y < 0 else Vector2.ZERO
 	var new_value := body.move_and_slide_with_snap(value * units, snap, up_direction, true) / units
 	

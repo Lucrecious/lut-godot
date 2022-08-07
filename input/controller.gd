@@ -86,7 +86,6 @@ func _ready() -> void:
 		add_user_signal('%s_just_released' % action)
 	
 	for i in directionals.size():
-		var d := directionals[i] as IDirectionalInput
 		add_user_signal('direction%d_changed' % (i + 1), [{
 			name = 'vector',
 			type = TYPE_VECTOR2
