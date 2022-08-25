@@ -130,6 +130,13 @@ static func get_sibling(node: Node, type, with_error := true) -> Node:
 	assert(not with_error)
 	return null
 
+static func get_child_by_group(parent: Node, group: String) -> Node:
+	for c in parent.get_children():
+		if not c.is_in_group(group):
+			continue
+		return c
+	return null
+
 static func set_owner_recursive(root: Node, owner: Node) -> void:
 	if not root: return
 	
