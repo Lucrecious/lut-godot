@@ -1,29 +1,42 @@
 class_name BackgroundResourceLoader
-extends Reference
+extends Node
 
 signal finished()
 
-var result = null
+var result := []
 
-var _worker: Thread = null
+var _paths_to_load := []
+var _current_loader: ResourceInteractiveLoader
 
-func load(paths: PoolStringArray) -> void:
-	_worker = Thread.new()
-	
-	_worker.start(self, '_load_resource', paths)
+func _init().() -> void:
+	set_process(false)
 
-func _load_resource(paths: PoolStringArray) -> Array:
-	var resources := []
-	for p in paths:
-		var resource := load(p)
-		resources.push_back(resource)
+func load(paths: Array) -> void:
+	if is_processing():
+		assert(false, 'busy')
+		return
 	
-	call_deferred('_on_finished')
+	_paths_to_load = paths
+	set_process(true)
+
+func _process(delta: float) -> void:
+	if _paths_to_load.empty() and not _current_loader:
+		set_process(false)
+		call_deferred('_on_finished')
+		return
 	
-	return resources
+	if not _current_loader:
+		var path := _paths_to_load.pop_front() as String
+		_current_loader = ResourceLoader.load_interactive(path)
+	
+	var err := _current_loader.poll()
+	if err != ERR_FILE_EOF:
+		return
+	
+	result.push_back(_current_loader.get_resource())
+	_current_loader = null
 
 func _on_finished() -> void:
-	result = _worker.wait_to_finish()
 	emit_signal('finished')
 
 
