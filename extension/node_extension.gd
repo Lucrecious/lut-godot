@@ -41,6 +41,11 @@ static func add_child(node: Node, child: Node) -> Node:
 	node.add_child(child)
 	return child
 
+static func add_children(node: Node, children: Array) -> void:
+	assert(node)
+	for child in children:
+		node.add_child(child)
+
 static func get_node(node: Node, path: NodePath, type, error := true) -> Node:
 	var found := node.get_node_or_null(path)
 	if found and found is type:
