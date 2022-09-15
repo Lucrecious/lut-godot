@@ -25,25 +25,20 @@ func _ready() -> void:
 	_rotation_noise = _create_noise()
 
 func _create_noise() -> OpenSimplexNoise:
-	if not noise_template.noise:
+	if noise_template and noise_template.noise:
 		var noise := noise_template.noise.duplicate() as OpenSimplexNoise
 		noise.seed = randi()
 		
 		return noise
 	else:
-		var noise := OpenSimplexNoise.new()
-		noise.seed = randi()
-		noise.octaves = 4
-		noise.period = 20
-		noise.persistence = .4
-		
-		return noise
+		assert(false)
+		return null
 
-var msec_passed := 0
+var msec_passed := 0.0
 func _process(delta: float) -> void:
-	trauma = max(trauma - trauma_loss_per_second * delta, 0)
+	trauma = max(trauma - trauma_loss_per_second * delta, 0.0)
 	
-	if is_equal_approx(trauma, 0):
+	if is_equal_approx(trauma, 0.0):
 		return
 	
 	var offset_x := _get_noise(_x_noise, msec_passed) * translation_max * trauma
@@ -51,6 +46,7 @@ func _process(delta: float) -> void:
 	var rotation := _get_noise(_rotation_noise, msec_passed) * rotation_max_degrees * trauma
 	
 	msec_passed += (delta * noise_template.width)
+	
 	
 	_camera.offset.x  = offset_x
 	_camera.offset.y = offset_y
