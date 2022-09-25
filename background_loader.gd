@@ -7,19 +7,27 @@ var result := []
 
 var _paths_to_load := []
 var _current_loader: ResourceInteractiveLoader
+var _is_busy := false
 
 func _init().() -> void:
 	set_process(false)
 
 func load(paths: Array) -> void:
-	if is_processing():
+	if _is_busy:
 		assert(false, 'busy')
 		return
 	
 	_paths_to_load = paths
+	_is_busy = true
 	set_process(true)
 
+func is_busy() -> bool:
+	return _is_busy
+
 func _process(delta: float) -> void:
+	if not _is_busy:
+		return
+	
 	if _paths_to_load.empty() and not _current_loader:
 		set_process(false)
 		call_deferred('_on_finished')
@@ -37,6 +45,7 @@ func _process(delta: float) -> void:
 	_current_loader = null
 
 func _on_finished() -> void:
+	_is_busy = false
 	emit_signal('finished')
 
 

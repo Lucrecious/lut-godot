@@ -1,13 +1,17 @@
 extends Node
 
-# signal must have no arguments.
-func pause_until_signal(tween: SceneTreeTween, object: Object, signal_name: String) -> void:
-	tween.tween_callback(self, '_pause_callback', [tween, object, signal_name])
+func pause_until_signal_if_condition(tween: SceneTreeTween, signal_object: Object, signal_name: String,
+		predicate_object: Object, predicate: String) -> void:
+	tween.tween_callback(self, '_pause_if_condition',
+			[tween, signal_object, signal_name, predicate_object, predicate])
 
-# workaround for lack of cyclic references
-func _pause_callback(tween: SceneTreeTween, object: Object, signal_name: String) -> void:
+func _pause_if_condition(tween: SceneTreeTween, signal_object: Object, signal_name: String,
+		predicate_object: Object, predicate: String) -> void:
+	if not predicate_object.call(predicate):
+		return
+	
 	tween.pause()
 	
-	yield(object, signal_name)
+	yield(signal_object, signal_name)
 	
 	tween.play()
