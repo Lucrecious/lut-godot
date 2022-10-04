@@ -1,7 +1,7 @@
 class_name SpanLimiter
 extends MarginContainer
 
-const MAX_SPAN := 1280
+const MAX_SPAN := 100_000
 const MIN_SPAN := 720
 
 func _init() -> void:
