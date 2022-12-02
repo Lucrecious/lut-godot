@@ -37,7 +37,12 @@ func _process(delta: float) -> void:
 		var path := _paths_to_load.pop_front() as String
 		_current_loader = ResourceLoader.load_interactive(path)
 	
-	var err := _current_loader.poll()
+	var err := 0
+	for i in 30:
+		err = _current_loader.poll()
+		if err == ERR_FILE_EOF:
+			break
+	
 	if err != ERR_FILE_EOF:
 		return
 	
