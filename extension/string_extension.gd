@@ -55,7 +55,7 @@ static func split_phrases(text: String) -> PoolStringArray:
 	while current_atom < atoms.size():
 		var atom := atoms[current_atom]
 		current_sentence.push_back(atom)
-		if _ends_with_phrase_ender(atom):
+		if _ends_with_phrase_ender(atom) or (atom.begins_with('{') and atom.ends_with('}')):
 			sentences.push_back(current_sentence.join(' ').replace('~', ' '))
 			current_sentence.resize(0)
 		
