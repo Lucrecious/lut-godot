@@ -19,6 +19,9 @@ func _ready() -> void:
 	
 	_max_points_set(current)
 
+func heal(value: int) -> void:
+	current_set(current + value)
+
 func damage(value: int) -> void:
 	current_set(current - value)
 
